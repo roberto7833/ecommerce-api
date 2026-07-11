@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matuta | Alta Costura & Minimalismo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Didot", "Playfair Display", Arial, sans-serif; }
+        body { background-color: #fcfbfa; color: #1c1a17; padding-bottom: 60px; }
+
+        header { background-color: #ffffff; padding: 25px 50px; border-bottom: 1px solid #eae5df; }
+        .header-container { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: auto; }
+        .logo { font-size: 32px; letter-spacing: 6px; color: #1c1a17; text-decoration: none; font-family: "Playfair Display", serif; }
+        .nav-links { display: flex; gap: 35px; list-style: none; }
+        .nav-links li { font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; cursor: pointer; color: #575249; }
+        .search-container { width: 250px; }
+        .search-container input { width: 100%; padding: 8px 12px; border: 1px solid #ccc; background-color: #fcfbfa; }
+
+        .hero-banner { position: relative; height: 450px; background-color: #eae5df; display: flex; align-items: center; justify-content: center; }
+        .hero-bg { display: flex; width: 100%; height: 100%; position: absolute; justify-content: space-between; }
+        .hero-bg img { height: 100%; width: 50%; object-fit: cover; }
+        .hero-content { position: relative; z-index: 2; text-align: center; color: #ffffff; background: rgba(28, 26, 23, 0.2); padding: 40px; backdrop-filter: blur(4px); }
+        .hero-content h1 { font-size: 55px; font-weight: 300; letter-spacing: 8px; margin-bottom: 15px; text-transform: uppercase; }
+        .hero-content p { font-size: 14px; letter-spacing: 3px; margin-bottom: 30px; text-transform: uppercase; font-weight: 300; }
+        .hero-btn { background-color: #ffffff; color: #1c1a17; border: none; padding: 14px 45px; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; }
+
+        .vitrine-section { max-width: 1400px; margin: 60px auto; padding: 0 50px; }
+        .vitrine-title { text-align: center; font-size: 24px; font-weight: 300; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 50px; }
+        .products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; }
+        .product-card { background: transparent; position: relative; }
+        .img-wrapper { position: relative; width: 100%; background-color: #f4f0ea; aspect-ratio: 3/4; overflow: hidden; }
+        .img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+        .product-info { padding: 15px 0 0 0; }
+        .product-name { font-size: 14px; color: #1c1a17; margin-bottom: 6px; font-weight: bold; }
+        .product-details { font-size: 12px; color: #7a7265; margin-bottom: 6px; }
+        .product-price { font-size: 15px; color: #1c1a17; margin-bottom: 10px; }
+        .btn-remove-card { width: 100%; background-color: #dc3545; color: white; border: none; padding: 8px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; }
+        .btn-remove-card:hover { background-color: #c82333; }
+
+        .admin-trigger { position: fixed; bottom: 30px; right: 30px; background: #1c1a17; color: white; border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 24px; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; }
+        .admin-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); z-index: 11; width: 450px; border: 1px solid #eae5df; }
+        .admin-modal input, .admin-modal select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #eae5df; background: #fcfbfa; }
+        .admin-modal button { width: 100%; padding: 14px; background: #1c1a17; color: white; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 10; }
+        .file-label { font-size: 12px; color: #575249; display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-container">
+        <a href="#" class="logo">MATUTA BOUTIQUE</a>
+        <ul class="nav-links">
+            <li>Nova Coleção</li>
+            <li>Vestidos</li>
+            <li>Alfaiataria</li>
+            <li>Essenciais</li>
+        </ul>
+        <div class="search-container">
+            <input type="text" id="inputBusca" placeholder="Buscar na Matuta...">
+        </div>
+    </div>
+</header>
+
+<section class="hero-banner">
+    <div class="hero-bg">
+        <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=800" alt="Banner 1">
+        <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=800" alt="Banner 2">
+    </div>
+    <div class="hero-content">
+        <h1>MATUTA</h1>
+        <p>Peças exclusivas</p>
+        <button class="hero-btn">Explorar Acervo</button>
+    </div>
+</section>
+
+<main class="vitrine-section">
+    <div class="vitrine-title">Destaques</div>
+    <div id="productsGrid" class="products-grid"></div>
+</main>
+
+<button class="admin-trigger" onclick="toggleAdmin(true)">+</button>
+<div id="overlay" class="overlay" onclick="toggleAdmin(false)"></div>
+<div id="adminModal" class="admin-modal">
+    <h3>Adicionar Peça</h3>
+    <form id="roupaForm">
+        <input type="text" id="nome" placeholder="Nome da Peça" required>
+        <input type="text" id="sku" placeholder="SKU Único" required>
+        <input type="number" step="0.01" id="preco" placeholder="Preço (R$)" required>
+        <input type="number" id="qtEstoque" placeholder="Quantidade Estoque" required>
+        <input type="text" id="cor" placeholder="Cor" required>
+        <select id="tamanho" required>
+            <option value="P">P</option>
+            <option value="M">M</option>
+            <option value="G">G</option>
+            <option value="GG">GG</option>
+        </select>
+        <label class="file-label">Escolha a Foto do Produto:</label>
+        <input type="file" id="fotoArquivo" accept="image/*" required>
+        <button type="submit">Salvar no Acervo</button>
+    </form>
+</div>
+
+<script>
+    const API_URL = 'http://localhost:8080/todos';
+    let produtosLocais = []; // Guarda a lista vinda do banco para realizar buscas rápidas
+
+    function toggleAdmin(show) {
+        document.getElementById('adminModal').style.display = show ? 'block' : 'none';
+        document.getElementById('overlay').style.display = show ? 'block' : 'none';
+    }
+
+    async function renderizarVitrine(listaParaExibir) {
+        const grid = document.getElementById('productsGrid');
+        grid.innerHTML = '';
+
+        const produtos = listaParaExibir ? listaParaExibir : produtosLocais;
+
+        if (produtos.length === 0) {
+            grid.innerHTML = '<p style="grid-column: span 4; text-align: center; color: #7a7265;">Nenhuma peça encontrada.</p>';
+            return;
+        }
+
+        produtos.forEach(p => {
+            const foto = (p.imagens && p.imagens.length > 0) ? p.imagens[0] : 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?q=80&w=500';
+
+            grid.innerHTML += `
+                    <div class="product-card">
+                        <div class="img-wrapper">
+                            <img src="${foto}" alt="${p.nome}">
+                        </div>
+                        <div class="product-info">
+                            <div class="product-name">${p.nome}</div>
+                            <div class="product-details">Tamanho ${p.tamanho} | Cor ${p.cor}</div>
+                            <div class="product-price">R$ ${p.preco.toFixed(2)}</div>
+                            <button class="btn-remove-card" onclick="deletarRoupa(${p.id})">Remover Acervo</button>
+                        </div>
+                    </div>
+                `;
+        });
+    }
+
+    async function carregarDados() {
+        try {
+            const resposta = await fetch(API_URL);
+            const dados = await resposta.json();
+            produtosLocais = dados.content ? dados.content : dados;
+            renderizarVitrine();
+        } catch (erro) {
+            console.error('Erro ao carregar os dados da vitrine:', erro);
+        }
+    }
+
+    // Lógica para filtrar as roupas em tempo real ao digitar no campo "Buscar na Matuta..."
+    document.getElementById('inputBusca').addEventListener('input', (e) => {
+        const termoBusca = e.target.value.toLowerCase().trim();
+        const produtosFiltrados = produtosLocais.filter(p =>
+            p.nome.toLowerCase().includes(termoBusca) ||
+            p.cor.toLowerCase().includes(termoBusca) ||
+            p.sku.toLowerCase().includes(termoBusca)
+        );
+        renderizarVitrine(produtosFiltrados);
+    });
+
+    document.getElementById('roupaForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fileInput = document.getElementById('fotoArquivo').files[0];
+
+        const roupaData = {
+            nome: document.getElementById('nome').value,
+            descricao: "Item exclusivo Matuta Boutique.",
+            preco: parseFloat(document.getElementById('preco').value),
+            sku: document.getElementById('sku').value,
+            qtEstoque: parseInt(document.getElementById('qtEstoque').value),
+            tamanho: document.getElementById('tamanho').value,
+            cor: document.getElementById('cor').value,
+            imagens: []
+        };
+
+        const formData = new FormData();
+        formData.append("data", new Blob([JSON.stringify(roupaData)], { type: "application/json" }));
+        if (fileInput) {
+            formData.append("foto", fileInput);
+        }
+
+        const resposta = await fetch(API_URL, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (resposta.ok) {
+            document.getElementById('roupaForm').reset();
+            toggleAdmin(false);
+            carregarDados();
+        } else {
+            alert('Erro ao salvar. Verifique se o SKU já existe.');
+        }
+    });
+
+    async function deletarRoupa(id) {
+        if (!confirm('Deseja realmente remover esta peça do catálogo?')) return;
+        const resposta = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+        if (resposta.ok) {
+            carregarDados();
+        } else {
+            alert('Erro ao deletar o item.');
+        }
+    }
+
+    // Inicialização
+    carregarDados();
+</script>
+</body>
+</html>
