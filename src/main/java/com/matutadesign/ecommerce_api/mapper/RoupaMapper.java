@@ -14,6 +14,7 @@ public class RoupaMapper {
                 .sku(dto.sku())
                 .qtEstoque(dto.qtEstoque())
                 .tamanho(dto.tamanho())
+                .categoria(dto.categoria())
                 .cor(dto.cor())
                 .imagens(dto.imagens())
                 .build();

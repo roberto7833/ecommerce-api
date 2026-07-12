@@ -1,5 +1,6 @@
 package com.matutadesign.ecommerce_api.dto;
 
+import com.matutadesign.ecommerce_api.entity.Categoria;
 import com.matutadesign.ecommerce_api.entity.Roupa;
 import com.matutadesign.ecommerce_api.entity.Tamanho;
 import java.time.LocalDateTime;
@@ -13,12 +14,13 @@ public record RoupaResponseDto(
         String sku,
         Integer qtEstoque,
         Tamanho tamanho,
+        Categoria categoria,
         String cor,
         LocalDateTime dataCadastro,
         LocalDateTime dataAtualizacao,
         List<String> imagens
 ) {
     public RoupaResponseDto(Roupa roupa){
-        this(roupa.getId(), roupa.getNome(), roupa.getDescricao(), roupa.getPreco(), roupa.getSku(), roupa.getQtEstoque(), roupa.getTamanho(), roupa.getCor(), roupa.getDataCadastro(), roupa.getDataAtualizacao(), roupa.getImagens());
+        this(roupa.getId(), roupa.getNome(), roupa.getDescricao(), roupa.getPreco(), roupa.getSku(), roupa.getQtEstoque(), roupa.getTamanho(), roupa.getCategoria(), roupa.getCor(), roupa.getDataCadastro(), roupa.getDataAtualizacao(), roupa.getImagens());
     }
 }

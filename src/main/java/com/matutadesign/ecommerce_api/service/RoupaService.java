@@ -74,6 +74,7 @@ public class RoupaService {
         roupaExistente.setSku(roupaDto.sku());
         roupaExistente.setQtEstoque(roupaDto.qtEstoque());
         roupaExistente.setTamanho(roupaDto.tamanho());
+        roupaExistente.setCategoria(roupaDto.categoria());
         roupaExistente.setCor(roupaDto.cor());
 
         roupaRepository.save(roupaExistente);

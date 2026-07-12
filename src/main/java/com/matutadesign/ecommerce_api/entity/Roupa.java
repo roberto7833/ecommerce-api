@@ -27,6 +27,9 @@ public class Roupa {
     @Enumerated(EnumType.STRING)
     private Tamanho tamanho;
 
+    @Enumerated(EnumType.STRING)
+    private Categoria categoria;
+
     private String cor;
 
     @Column(name = "data_cadastro", nullable = false, updatable = false)

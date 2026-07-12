@@ -1,5 +1,6 @@
 package com.matutadesign.ecommerce_api.dto;
 
+import com.matutadesign.ecommerce_api.entity.Categoria;
 import com.matutadesign.ecommerce_api.entity.Tamanho;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -17,6 +18,8 @@ public record RoupaRequestDto(
         Integer qtEstoque,
         @NotNull(message = "O tamanho é obrigatório")
         Tamanho tamanho,
+        @NotNull(message = "A categoria é obrigatória")
+        Categoria categoria,
         @NotBlank(message = "A cor é obrigatória")
         String cor,
         List<String> imagens

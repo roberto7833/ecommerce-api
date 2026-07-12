@@ -8,13 +8,232 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Didot", "Playfair Display", Arial, sans-serif; }
         body { background-color: #fcfbfa; color: #1c1a17; padding-bottom: 60px; }
 
-        header { background-color: #ffffff; padding: 25px 50px; border-bottom: 1px solid #eae5df; }
-        .header-container { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: auto; }
-        .logo { font-size: 32px; letter-spacing: 6px; color: #1c1a17; text-decoration: none; font-family: "Playfair Display", serif; }
-        .nav-links { display: flex; gap: 35px; list-style: none; }
-        .nav-links li { font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; cursor: pointer; color: #575249; }
-        .search-container { width: 250px; }
-        .search-container input { width: 100%; padding: 8px 12px; border: 1px solid #ccc; background-color: #fcfbfa; }
+        header {
+            background-color: #ffffff;
+            padding: 25px 50px;
+            border-bottom: 1px solid #eae5df;
+            width: 100%;
+        }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: auto;
+            width: 100%;
+        }
+        .logo {
+            font-size: 28px;
+            letter-spacing: 5px;
+            color: #1c1a17;
+            text-decoration: none;
+            font-family: "Playfair Display", serif;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+            align-items: center;
+            margin-left: auto;
+        }
+        .nav-links li {
+            font-size: 12px;
+            cursor: pointer;
+            color: #575249;
+            transition: color 0.2s;
+            white-space: nowrap;
+        }
+        .nav-links li.uppercase {
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        .nav-links li:hover {
+            color: #1c1a17;
+            font-weight: bold;
+        }
+
+        .search-container {
+            width: 200px;
+            margin-right: 10px;
+        }
+        .search-container input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #eae5df;
+            background-color: #fcfbfa;
+            font-size: 12px;
+            outline: none;
+        }
+        .search-container input::placeholder {
+            color: #7a7265;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 10px;
+        }
+
+        .btn-auth {
+            font-size: 11px !important;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border: 1px solid #1c1a17;
+            padding: 8px 18px;
+            transition: all 0.2s;
+            display: inline-block;
+            text-align: center;
+        }
+        .btn-auth:hover {
+            background: #1c1a17;
+            color: #ffffff !important;
+        }
+
+        .sacola-container {
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 5px;
+            color: #1c1a17;
+        }
+        .sacola-container svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.5;
+        }
+        .sacola-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background-color: #1c1a17;
+            color: #ffffff;
+            font-family: sans-serif;
+            font-size: 9px;
+            font-weight: bold;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sacola-drawer {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background-color: #ffffff;
+            box-shadow: -5px 0 30px rgba(0,0,0,0.05);
+            z-index: 100;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid #eae5df;
+        }
+        .sacola-drawer.open {
+            right: 0;
+        }
+        .drawer-header {
+            padding: 30px;
+            border-bottom: 1px solid #eae5df;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .drawer-header h3 {
+            font-family: "Playfair Display", serif;
+            font-size: 18px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .btn-close-drawer {
+            background: transparent;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #7a7265;
+        }
+        .drawer-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+        .cart-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #f4f0ea;
+            align-items: center;
+        }
+        .cart-item-img {
+            width: 60px;
+            aspect-ratio: 3/4;
+            background-color: #f4f0ea;
+            object-fit: cover;
+        }
+        .cart-item-info {
+            flex: 1;
+        }
+        .cart-item-name {
+            font-size: 13px;
+            font-weight: bold;
+            color: #1c1a17;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .cart-item-meta {
+            font-size: 11px;
+            color: #7a7265;
+        }
+        .cart-item-price {
+            font-size: 13px;
+            color: #1c1a17;
+            margin-top: 5px;
+        }
+        .btn-remove-item {
+            background: transparent;
+            border: none;
+            color: #dc3545;
+            font-size: 11px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .drawer-footer {
+            padding: 30px;
+            border-top: 1px solid #eae5df;
+            background-color: #fcfbfa;
+        }
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 15px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+        .btn-finalizar {
+            width: 100%;
+            padding: 16px;
+            background-color: #1c1a17;
+            color: #ffffff;
+            border: none;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-finalizar:hover { opacity: 0.9; }
 
         .hero-banner { position: relative; height: 450px; background-color: #eae5df; display: flex; align-items: center; justify-content: center; }
         .hero-bg { display: flex; width: 100%; height: 100%; position: absolute; justify-content: space-between; }
@@ -22,26 +241,31 @@
         .hero-content { position: relative; z-index: 2; text-align: center; color: #ffffff; background: rgba(28, 26, 23, 0.2); padding: 40px; backdrop-filter: blur(4px); }
         .hero-content h1 { font-size: 55px; font-weight: 300; letter-spacing: 8px; margin-bottom: 15px; text-transform: uppercase; }
         .hero-content p { font-size: 14px; letter-spacing: 3px; margin-bottom: 30px; text-transform: uppercase; font-weight: 300; }
-        .hero-btn { background-color: #ffffff; color: #1c1a17; border: none; padding: 14px 45px; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; }
+        .hero-btn { background-color: #ffffff; color: #1c1a17; border: none; padding: 14px 45px; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: background 0.2s; }
+        .hero-btn:hover { background-color: #1c1a17; color: #ffffff; }
 
         .vitrine-section { max-width: 1400px; margin: 60px auto; padding: 0 50px; }
         .vitrine-title { text-align: center; font-size: 24px; font-weight: 300; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 50px; }
         .products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; }
-        .product-card { background: transparent; position: relative; }
+
+        .product-card { background: transparent; position: relative; text-decoration: none; color: inherit; display: block; }
         .img-wrapper { position: relative; width: 100%; background-color: #f4f0ea; aspect-ratio: 3/4; overflow: hidden; }
-        .img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+        .img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .product-card:hover .img-wrapper img { transform: scale(1.03); }
+
         .product-info { padding: 15px 0 0 0; }
         .product-name { font-size: 14px; color: #1c1a17; margin-bottom: 6px; font-weight: bold; }
         .product-details { font-size: 12px; color: #7a7265; margin-bottom: 6px; }
         .product-price { font-size: 15px; color: #1c1a17; margin-bottom: 10px; }
-        .btn-remove-card { width: 100%; background-color: #dc3545; color: white; border: none; padding: 8px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; }
-        .btn-remove-card:hover { background-color: #c82333; }
 
-        .admin-trigger { position: fixed; bottom: 30px; right: 30px; background: #1c1a17; color: white; border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 24px; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; }
-        .admin-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); z-index: 11; width: 450px; border: 1px solid #eae5df; }
+        .admin-trigger { display: none; position: fixed; bottom: 30px; right: 30px; background: #1c1a17; color: white; border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 24px; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; }
+
+        /* Ajuste do z-index para 101 garantindo que fique à frente do overlay */
+        .admin-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); z-index: 101; width: 450px; border: 1px solid #eae5df; max-height: 90vh; overflow-y: auto; }
         .admin-modal input, .admin-modal select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #eae5df; background: #fcfbfa; }
         .admin-modal button { width: 100%; padding: 14px; background: #1c1a17; color: white; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; }
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 10; }
+
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 90; }
         .file-label { font-size: 12px; color: #575249; display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
@@ -49,18 +273,49 @@
 
 <header>
     <div class="header-container">
-        <a href="#" class="logo">MATUTA BOUTIQUE</a>
+        <div class="logo" onclick="filtrarCategoria('ALL')">MATUTA BOUTIQUE</div>
         <ul class="nav-links">
-            <li>Nova Coleção</li>
-            <li>Vestidos</li>
-            <li>Alfaiataria</li>
-            <li>Essenciais</li>
+            <li>
+                <div class="search-container">
+                    <input type="text" id="inputBusca" placeholder="Buscar na Matuta...">
+                </div>
+            </li>
+            <li class="uppercase" onclick="filtrarCategoria('NOVA_COLECO')">NOVA COLEÇÃO</li>
+            <li class="uppercase" onclick="filtrarCategoria('VESTIDOS')">VESTIDOS</li>
+            <li class="uppercase" onclick="filtrarCategoria('MODA_FEMININA')">moda feminina</li>
+            <li class="uppercase" onclick="filtrarCategoria('MODA_MASCULINA')">moda masculina</li>
+            <li class="uppercase" onclick="filtrarCategoria('ACESSORIOS')">ACESSÓRIOS</li>
+
+            <li id="abaSacola" style="display: none;">
+                <button class="sacola-container" onclick="toggleSacola(true)">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                    <span id="sacolaContador" class="sacola-badge">0</span>
+                </button>
+            </li>
+
+            <li id="authBtn" class="btn-auth" onclick="gerenciarSessao()">Login</li>
         </ul>
-        <div class="search-container">
-            <input type="text" id="inputBusca" placeholder="Buscar na Matuta...">
-        </div>
     </div>
 </header>
+
+<div id="sacolaDrawer" class="sacola-drawer">
+    <div class="drawer-header">
+        <h3>Sua Sacola</h3>
+        <button class="btn-close-drawer" onclick="toggleSacola(false)">✕</button>
+    </div>
+    <div id="drawerContent" class="drawer-content"></div>
+    <div class="drawer-footer">
+        <div class="total-row">
+            <span>Total:</span>
+            <span id="sacolaTotal">R$ 0,00</span>
+        </div>
+        <button class="btn-finalizar" onclick="finalizarCompra()">Finalizar Compra</button>
+    </div>
+</div>
 
 <section class="hero-banner">
     <div class="hero-bg">
@@ -69,18 +324,19 @@
     </div>
     <div class="hero-content">
         <h1>MATUTA</h1>
-        <p>Peças exclusivas</p>
-        <button class="hero-btn">Explorar Acervo</button>
+        <p>PEÇAS EXCLUSIVAS</p>
+        <button class="hero-btn" onclick="rolarParaDestaques()">ACERVO</button>
     </div>
 </section>
 
-<main class="vitrine-section">
-    <div class="vitrine-title">Destaques</div>
+<main class="vitrine-section" id="secaoDestaques">
+    <div class="vitrine-title" id="tituloVitrine">DESTAQUES</div>
     <div id="productsGrid" class="products-grid"></div>
 </main>
 
-<button class="admin-trigger" onclick="toggleAdmin(true)">+</button>
-<div id="overlay" class="overlay" onclick="toggleAdmin(false)"></div>
+<button id="btnAdminFlutuante" class="admin-trigger" onclick="toggleAdmin(true)">+</button>
+<div id="overlay" class="overlay" onclick="fecharModais()"></div>
+
 <div id="adminModal" class="admin-modal">
     <h3>Adicionar Peça</h3>
     <form id="roupaForm">
@@ -89,12 +345,24 @@
         <input type="number" step="0.01" id="preco" placeholder="Preço (R$)" required>
         <input type="number" id="qtEstoque" placeholder="Quantidade Estoque" required>
         <input type="text" id="cor" placeholder="Cor" required>
+
+        <label class="file-label">Selecione o Tamanho:</label>
         <select id="tamanho" required>
             <option value="P">P</option>
             <option value="M">M</option>
             <option value="G">G</option>
             <option value="GG">GG</option>
         </select>
+
+        <label class="file-label">Selecione a Categoria:</label>
+        <select id="categoria" required>
+            <option value="NOVA_COLECO">NOVA COLEÇÃO</option>
+            <option value="VESTIDOS">VESTIDOS</option>
+            <option value="MODA_FEMININA">MODA FEMININA</option>
+            <option value="MODA_MASCULINA">MODA MASCULINA</option>
+            <option value="ACESSORIOS">ACESSÓRIOS</option>
+        </select>
+
         <label class="file-label">Escolha a Foto do Produto:</label>
         <input type="file" id="fotoArquivo" accept="image/*" required>
         <button type="submit">Salvar no Acervo</button>
@@ -103,29 +371,130 @@
 
 <script>
     const API_URL = 'http://localhost:8080/todos';
-    let produtosLocais = []; // Guarda a lista vinda do banco para realizar buscas rápidas
+    let produtosLocais = [];
+
+    function checarPermissoes() {
+        const role = localStorage.getItem('userRole');
+        const authBtn = document.getElementById('authBtn');
+        const btnAdminFlutuante = document.getElementById('btnAdminFlutuante');
+        const abaSacola = document.getElementById('abaSacola');
+
+        if (role) {
+            authBtn.innerText = 'Sair';
+            btnAdminFlutuante.style.display = (role === 'VENDEDOR') ? 'flex' : 'none';
+            abaSacola.style.display = (role === 'CLIENTE') ? 'block' : 'none';
+        } else {
+            authBtn.innerText = 'Login';
+            btnAdminFlutuante.style.display = 'none';
+            abaSacola.style.display = 'none';
+        }
+        atualizarContadorSacola();
+    }
+
+    function gerenciarSessao() {
+        if (localStorage.getItem('userRole')) {
+            localStorage.clear();
+            window.location.reload();
+        } else {
+            window.location.href = 'login.html';
+        }
+    }
 
     function toggleAdmin(show) {
         document.getElementById('adminModal').style.display = show ? 'block' : 'none';
         document.getElementById('overlay').style.display = show ? 'block' : 'none';
     }
 
+    function toggleSacola(show) {
+        const drawer = document.getElementById('sacolaDrawer');
+        const overlay = document.getElementById('overlay');
+        if (show) {
+            drawer.classList.add('open');
+            overlay.style.display = 'block';
+            renderizarSacola();
+        } else {
+            drawer.classList.remove('open');
+            overlay.style.display = 'none';
+        }
+    }
+
+    function fecharModais() {
+        toggleAdmin(false);
+        toggleSacola(false);
+    }
+
+    function rolarParaDestaques() {
+        document.getElementById('secaoDestaques').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function obterItensSacola() {
+        return JSON.parse(localStorage.getItem('matuta_cart') || '[]');
+    }
+
+    function atualizarContadorSacola() {
+        const itens = obterItensSacola();
+        document.getElementById('sacolaContador').innerText = itens.length;
+    }
+
+    function renderizarSacola() {
+        const content = document.getElementById('drawerContent');
+        const totalText = document.getElementById('sacolaTotal');
+        const itens = obterItensSacola();
+
+        content.innerHTML = '';
+        if(itens.length === 0) {
+            content.innerHTML = '<p style="text-align:center; color:#7a7265; margin-top:40px;">Sua sacola está vazia.</p>';
+            totalText.innerText = 'R$ 0,00';
+            return;
+        }
+
+        let soma = 0;
+        itens.forEach((item, index) => {
+            soma += item.preco;
+            content.innerHTML += `
+                    <div class="cart-item">
+                        <img src="${item.foto}" class="cart-item-img" alt="${item.nome}">
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.nome}</div>
+                            <div class="cart-item-meta">Tam: ${item.tamanho} | Cor: ${item.cor}</div>
+                            <div class="cart-item-price">R$ ${item.preco.toFixed(2)}</div>
+                        </div>
+                        <button class="btn-remove-item" onclick="removerItemSacola(${index})">Remover</button>
+                    </div>
+                `;
+        });
+        totalText.innerText = `R$ ${soma.toFixed(2)}`;
+    }
+
+    function removerItemSacola(index) {
+        let itens = obterItensSacola();
+        itens.splice(index, 1);
+        localStorage.setItem('matuta_cart', JSON.stringify(itens));
+        atualizarContadorSacola();
+        renderizarSacola();
+    }
+
+    function finalizarCompra() {
+        alert('Pedido recebido! Obrigado por comprar na Matuta Boutique.');
+        localStorage.removeItem('matuta_cart');
+        fecharModais();
+        atualizarContadorSacola();
+    }
+
     async function renderizarVitrine(listaParaExibir) {
         const grid = document.getElementById('productsGrid');
         grid.innerHTML = '';
-
         const produtos = listaParaExibir ? listaParaExibir : produtosLocais;
 
         if (produtos.length === 0) {
-            grid.innerHTML = '<p style="grid-column: span 4; text-align: center; color: #7a7265;">Nenhuma peça encontrada.</p>';
+            grid.innerHTML = '<p style="grid-column: span 4; text-align: center; color: #7a7265; padding: 40px 0;">Nenhuma peça encontrada.</p>';
             return;
         }
 
         produtos.forEach(p => {
             const foto = (p.imagens && p.imagens.length > 0) ? p.imagens[0] : 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?q=80&w=500';
-
             grid.innerHTML += `
-                    <div class="product-card">
+                    <a href="produto.html?id=${p.id}" class="product-card">
                         <div class="img-wrapper">
                             <img src="${foto}" alt="${p.nome}">
                         </div>
@@ -133,9 +502,8 @@
                             <div class="product-name">${p.nome}</div>
                             <div class="product-details">Tamanho ${p.tamanho} | Cor ${p.cor}</div>
                             <div class="product-price">R$ ${p.preco.toFixed(2)}</div>
-                            <button class="btn-remove-card" onclick="deletarRoupa(${p.id})">Remover Acervo</button>
                         </div>
-                    </div>
+                    </a>
                 `;
         });
     }
@@ -151,9 +519,29 @@
         }
     }
 
-    // Lógica para filtrar as roupas em tempo real ao digitar no campo "Buscar na Matuta..."
+    function filtrarCategoria(categoriaEnum) {
+        document.getElementById('inputBusca').value = '';
+        const titulo = document.getElementById('tituloVitrine');
+
+        if (categoriaEnum === 'ALL') {
+            titulo.innerText = 'DESTAQUES';
+            renderizarVitrine(produtosLocais);
+        } else {
+            if (categoriaEnum === 'NOVA_COLECO') {
+                titulo.innerText = 'NOVA COLEÇÃO';
+            } else {
+                titulo.innerText = categoriaEnum.replace('_', ' ');
+            }
+            const filtrados = produtosLocais.filter(p => p.categoria === categoriaEnum);
+            renderizarVitrine(filtrados);
+        }
+        rolarParaDestaques();
+    }
+
     document.getElementById('inputBusca').addEventListener('input', (e) => {
         const termoBusca = e.target.value.toLowerCase().trim();
+        document.getElementById('tituloVitrine').innerText = termoBusca ? 'RESULTADOS DA BUSCA' : 'DESTAQUES';
+
         const produtosFiltrados = produtosLocais.filter(p =>
             p.nome.toLowerCase().includes(termoBusca) ||
             p.cor.toLowerCase().includes(termoBusca) ||
@@ -173,6 +561,7 @@
             sku: document.getElementById('sku').value,
             qtEstoque: parseInt(document.getElementById('qtEstoque').value),
             tamanho: document.getElementById('tamanho').value,
+            categoria: document.getElementById('categoria').value,
             cor: document.getElementById('cor').value,
             imagens: []
         };
@@ -190,24 +579,14 @@
 
         if (resposta.ok) {
             document.getElementById('roupaForm').reset();
-            toggleAdmin(false);
+            fecharModais();
             carregarDados();
         } else {
             alert('Erro ao salvar. Verifique se o SKU já existe.');
         }
     });
 
-    async function deletarRoupa(id) {
-        if (!confirm('Deseja realmente remover esta peça do catálogo?')) return;
-        const resposta = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-        if (resposta.ok) {
-            carregarDados();
-        } else {
-            alert('Erro ao deletar o item.');
-        }
-    }
-
-    // Inicialização
+    checarPermissoes();
     carregarDados();
 </script>
 </body>

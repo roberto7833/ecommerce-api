@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matuta | Identificação</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Didot", "Playfair Display", Arial, sans-serif; }
+        body { background-color: #fcfbfa; color: #1c1a17; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+
+        .login-container { background: #ffffff; padding: 50px; border: 1px solid #eae5df; width: 100%; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); text-align: center; }
+        .logo { font-size: 28px; letter-spacing: 6px; font-family: "Playfair Display", serif; margin-bottom: 40px; text-decoration: none; color: #1c1a17; display: block; }
+
+        h2 { font-size: 16px; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 25px; color: #575249; }
+
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #7a7265; margin-bottom: 6px; }
+
+        .password-wrapper { position: relative; width: 100%; }
+        .input-group input { width: 100%; padding: 14px; padding-right: 45px; border: 1px solid #eae5df; background: #fcfbfa; font-size: 14px; outline: none; }
+        .input-group input:focus { border-color: #1c1a17; }
+
+        /* Botão do olho com fundo 100% transparente */
+        .toggle-password { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #7a7265; cursor: pointer; display: flex; align-items: center; justify-content: center; user-select: none; outline: none; padding: 0; width: 20px; height: 20px; }
+        .toggle-password hover { color: #1c1a17; }
+        .toggle-password svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+        .btn-login { width: 100%; padding: 16px; background: #1c1a17; color: white; border: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; margin-top: 10px; transition: opacity 0.2s; }
+        .btn-login:hover { opacity: 0.9; }
+
+        .switch-form { margin-top: 25px; font-size: 13px; color: #575249; }
+        .switch-link { color: #1c1a17; text-decoration: none; font-weight: bold; margin-left: 5px; border-bottom: 1px solid #1c1a17; padding-bottom: 1px; cursor: pointer; }
+        .switch-link:hover { color: #7a7265; border-color: #7a7265; }
+
+        .demo-credentials { margin-top: 30px; padding: 15px; background: #f4f0ea; border-radius: 2px; text-align: left; }
+        .demo-credentials p { font-size: 11px; color: #7a7265; line-height: 1.6; }
+        .demo-credentials strong { color: #1c1a17; }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <a href="index.html" class="logo">MATUTA BOUTIQUE</a>
+
+    <!-- Bloco de Login -->
+    <div id="loginView">
+        <h2>Acesso ao Sistema</h2>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="loginEmail">E-mail</label>
+                <input type="text" id="loginEmail" required placeholder="Digite seu Email">
+            </div>
+
+            <div class="input-group">
+                <label for="loginSenha">Senha</label>
+                <div class="password-wrapper">
+                    <input type="password" id="loginSenha" required placeholder="••••••••">
+                    <button type="button" class="toggle-password" onclick="alternarVisibilidadeSenha('loginSenha', this)">
+                        <!-- SVG do Olho Aberto -->
+                        <svg id="icon-loginSenha" viewBox="0 0 24 24">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-login">Entrar</button>
+        </form>
+
+        <div class="switch-form">
+            Não tem uma conta?<span class="switch-link" onclick="alternarTelas(true)">Criar conta</span>
+        </div>
+    </div>
+
+    <!-- Bloco de Cadastro -->
+    <div id="cadastroView" style="display: none;">
+        <h2>Criar Nova Conta</h2>
+        <form id="cadastroForm">
+            <div class="input-group">
+                <label for="cadNome">Nome Completo</label>
+                <input type="text" id="cadNome" required placeholder="Seu nome completo">
+            </div>
+
+            <div class="input-group">
+                <label for="cadEmail">E-mail</label>
+                <input type="email" id="cadEmail" required placeholder="exemplo@email.com">
+            </div>
+
+            <div class="input-group">
+                <label for="cadSenha">Senha</label>
+                <div class="password-wrapper">
+                    <input type="password" id="cadSenha" required placeholder="Crie uma senha estável">
+                    <button type="button" class="toggle-password" onclick="alternarVisibilidadeSenha('cadSenha', this)">
+                        <!-- SVG do Olho Aberto -->
+                        <svg id="icon-cadSenha" viewBox="0 0 24 24">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-login">Cadastrar Conta</button>
+        </form>
+
+        <div class="switch-form">
+            Já possui acesso?<span class="switch-link" onclick="alternarTelas(false)">Fazer Login</span>
+        </div>
+    </div>
+
+    <!-- Informações de Teste -->
+    <div class="demo-credentials" id="demoBox">
+        <p><strong>Acessos de Teste:</strong></p>
+        <p>Vendedor: <code>admin</code> | Senha: <code>123</code></p>
+        <p>Cliente: <code>cliente</code> | Senha: <code>123</code></p>
+    </div>
+</div>
+
+<script>
+    // Altera a visibilidade da senha mudando o traçado do vetor SVG de forma transparente
+    function alternarVisibilidadeSenha(idInput, botao) {
+        const campoSenha = document.getElementById(idInput);
+        const svgIcon = document.getElementById(`icon-${idInput}`);
+
+        if (campoSenha.type === "password") {
+            campoSenha.type = "text";
+            // Desenha a linha cortando o olho (Olho Fechado)
+            svgIcon.innerHTML = `
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                `;
+        } else {
+            campoSenha.type = "password";
+            // Retorna ao desenho original (Olho Aberto)
+            svgIcon.innerHTML = `
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                `;
+        }
+    }
+
+    function alternarTelas(mostrarCadastro) {
+        const loginView = document.getElementById('loginView');
+        const cadastroView = document.getElementById('cadastroView');
+        const demoBox = document.getElementById('demoBox');
+
+        if (mostrarCadastro) {
+            loginView.style.display = 'none';
+            cadastroView.style.display = 'block';
+            demoBox.style.display = 'none';
+        } else {
+            loginView.style.display = 'block';
+            cadastroView.style.display = 'none';
+            demoBox.style.display = 'block';
+        }
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const email = document.getElementById('loginEmail').value.trim();
+        const senha = document.getElementById('loginSenha').value;
+
+        if (email === 'admin' && senha === '123') {
+            localStorage.setItem('userRole', 'VENDEDOR');
+            localStorage.setItem('userName', 'Matuta Staff');
+            window.location.href = 'index.html';
+        } else if (email === 'cliente' && senha === '123') {
+            localStorage.setItem('userRole', 'CLIENTE');
+            localStorage.setItem('userName', 'Cliente Especial');
+            window.location.href = 'index.html';
+        } else {
+            alert('Credenciais inválidas. Use as contas de teste informadas abaixo.');
+        }
+    });
+
+    document.getElementById('cadastroForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const nome = document.getElementById('cadNome').value.trim();
+        const email = document.getElementById('cadEmail').value.trim();
+
+        alert(`Conta para ${nome} criada com sucesso! Você já pode fazer login.`);
+        alternarTelas(false);
+        document.getElementById('loginEmail').value = email;
+    });
+</script>
+</body>
+</html>

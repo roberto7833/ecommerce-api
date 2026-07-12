@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matuta | Detalhes do Produto</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Didot", "Playfair Display", Arial, sans-serif; }
+        body { background-color: #fcfbfa; color: #1c1a17; padding-bottom: 100px; }
+
+        header { background-color: #ffffff; padding: 25px 50px; border-bottom: 1px solid #eae5df; }
+        .header-container { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: auto; }
+        .logo { font-size: 32px; letter-spacing: 6px; color: #1c1a17; text-decoration: none; font-family: "Playfair Display", serif; cursor: pointer; }
+
+        .right-menu { display: flex; align-items: center; gap: 25px; }
+        .btn-voltar { font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; cursor: pointer; color: #575249; text-decoration: none; border-bottom: 1px solid #575249; padding-bottom: 2px; }
+        .btn-auth { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; border: 1px solid #1c1a17; padding: 6px 15px; cursor: pointer; }
+
+        .sacola-container {
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 5px;
+            color: #1c1a17;
+        }
+        .sacola-container svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.5;
+        }
+        .sacola-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background-color: #1c1a17;
+            color: #ffffff;
+            font-family: sans-serif;
+            font-size: 9px;
+            font-weight: bold;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .produto-container { max-width: 1200px; margin: 60px auto; padding: 0 50px; display: flex; gap: 80px; }
+
+        .col-imagem { flex: 1.2; background-color: #f4f0ea; aspect-ratio: 3/4; overflow: hidden; }
+        .col-imagem img { width: 100%; height: 100%; object-fit: cover; }
+
+        #produtoFoto:not([src]) { visibility: hidden; }
+
+        .col-detalhes { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+
+        .editable-input { font-size: 28px; font-weight: 400; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; font-family: "Playfair Display", serif; border: none; background: transparent; width: 100%; outline: none; color: #1c1a17; }
+        .editable-input.active-edit, .editable-field.active-edit, .p-preco.active-edit { border-bottom: 1px dashed #7a7265; background: #ffffff; padding: 2px 5px; }
+
+        .p-sku { font-size: 11px; color: #7a7265; letter-spacing: 1px; margin-bottom: 25px; }
+
+        .price-container { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; }
+        .p-preco { font-size: 22px; color: #1c1a17; font-weight: 300; border: none; background: transparent; width: 150px; outline: none; }
+
+        .info-linha { border-top: 1px solid #eae5df; border-bottom: 1px solid #eae5df; padding: 20px 0; margin-bottom: 30px; }
+        .info-item { font-size: 13px; color: #575249; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; }
+
+        .editable-field { border: none; background: transparent; font-size: 13px; color: #1c1a17; font-weight: bold; margin-left: 5px; outline: none; font-family: sans-serif; }
+        select.editable-field { cursor: pointer; -webkit-appearance: none; -moz-appearance: none; appearance: none; }
+
+        .btn-salvar-all { display: none; background: #1c1a17; color: white; border: none; padding: 12px 30px; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; margin-bottom: 15px; width: 100%; text-align: center; font-weight: bold; }
+        .btn-salvar-all:hover { opacity: 0.9; }
+
+        .btn-sacola { width: 100%; padding: 16px; background-color: #1c1a17; color: white; border: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; margin-bottom: 15px; transition: opacity 0.2s; }
+        .btn-sacola:hover { opacity: 0.9; }
+
+        .btn-deletar { display: none; width: 100%; padding: 12px; background-color: transparent; color: #dc3545; border: 1px solid #dc3545; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: background 0.2s; }
+        .btn-deletar:hover { background-color: #dc3545; color: white; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-container">
+        <a href="index.html" class="logo">MATUTA BOUTIQUE</a>
+        <div class="right-menu">
+            <a href="index.html" class="btn-voltar">← Voltar ao acervo</a>
+
+            <div id="abaSacola" style="display: none;">
+                <button class="sacola-container" onclick="window.location.href='index.html'">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                    <span id="sacolaContador" class="sacola-badge">0</span>
+                </button>
+            </div>
+
+            <span id="authBtn" class="btn-auth" onclick="gerenciarSessao()">Login</span>
+        </div>
+    </div>
+</header>
+
+<main class="produto-container">
+    <div class="col-imagem">
+        <img id="produtoFoto" alt="">
+    </div>
+
+    <div class="col-detalhes">
+        <input type="text" id="produtoNome" class="editable-input" readonly>
+        <div class="p-sku" id="produtoSku">SKU: --</div>
+
+        <div class="price-container">
+            <span>R$</span>
+            <input type="number" step="0.01" id="produtoPreco" class="p-preco" readonly>
+        </div>
+
+        <div class="info-linha">
+            <div class="info-item">
+                Categoria:
+                <select id="produtoCategoria" class="editable-field" disabled>
+                    <option value="NOVA_COLECO">NOVA COLEÇÃO</option>
+                    <option value="VESTIDOS">VESTIDOS</option>
+                    <option value="MODA_FEMININA">MODA FEMININA</option>
+                    <option value="MODA_MASCULINA">MODA MASCULINA</option>
+                    <option value="ACESSORIOS">ACESSÓRIOS</option>
+                </select>
+            </div>
+            <div class="info-item">
+                Tamanho:
+                <select id="produtoTamanho" class="editable-field" disabled>
+                    <option value="P">P</option>
+                    <option value="M">M</option>
+                    <option value="G">G</option>
+                    <option value="GG">GG</option>
+                </select>
+            </div>
+            <div class="info-item">
+                Cor Disponível:
+                <input type="text" id="produtoCor" class="editable-field" readonly>
+            </div>
+            <div class="info-item">
+                Estoque:
+                <input type="number" id="produtoEstoque" class="editable-field" style="width: 80px;" readonly>
+            </div>
+        </div>
+
+        <button id="btnSalvarAlteracoes" class="btn-salvar-all" onclick="salvarAlteracoesProduto()">Salvar Alterações</button>
+        <button id="btnSacola" class="btn-sacola" onclick="adicionarAoCarrinho()">Adicionar à Sacola</button>
+        <button class="btn-deletar" id="btnRemover">Remover do Catálogo</button>
+    </div>
+</main>
+
+<script>
+    const API_URL = 'http://localhost:8080/todos';
+    const urlParams = new URLSearchParams(window.location.search);
+    const produtoId = urlParams.get('id');
+    let produtoAtual = null;
+
+    function checarPermissoes() {
+        const role = localStorage.getItem('userRole');
+        const authBtn = document.getElementById('authBtn');
+        const btnRemover = document.getElementById('btnRemover');
+        const btnSacola = document.getElementById('btnSacola');
+        const btnSalvar = document.getElementById('btnSalvarAlteracoes');
+        const abaSacola = document.getElementById('abaSacola');
+
+        const nomeInput = document.getElementById('produtoNome');
+        const precoInput = document.getElementById('produtoPreco');
+        const categoriaSelect = document.getElementById('produtoCategoria');
+        const tamanhoSelect = document.getElementById('produtoTamanho');
+        const corInput = document.getElementById('produtoCor');
+        const estoqueInput = document.getElementById('produtoEstoque');
+
+        if (role) {
+            authBtn.innerText = 'Sair';
+            abaSacola.style.display = (role === 'CLIENTE') ? 'block' : 'none';
+
+            if (role === 'VENDEDOR') {
+                btnRemover.style.display = 'block';
+                btnSacola.style.display = 'none';
+                btnSalvar.style.display = 'block';
+
+                nomeInput.removeAttribute('readonly');
+                nomeInput.classList.add('active-edit');
+                precoInput.removeAttribute('readonly');
+                precoInput.classList.add('active-edit');
+                corInput.removeAttribute('readonly');
+                corInput.classList.add('active-edit');
+                estoqueInput.removeAttribute('readonly');
+                estoqueInput.classList.add('active-edit');
+
+                categoriaSelect.removeAttribute('disabled');
+                categoriaSelect.classList.add('active-edit');
+                tamanhoSelect.removeAttribute('disabled');
+                tamanhoSelect.classList.add('active-edit');
+            } else {
+                configurarModoVisualizacao();
+            }
+        } else {
+            authBtn.innerText = 'Login';
+            configurarModoVisualizacao();
+            abaSacola.style.display = 'none';
+            btnSacola.setAttribute('onclick', "window.location.href='login.html'");
+        }
+        atualizarContadorSacola();
+    }
+
+    function configurarModoVisualizacao() {
+        document.getElementById('btnRemover').style.display = 'none';
+        document.getElementById('btnSalvarAlteracoes').style.display = 'none';
+        document.getElementById('btnSacola').style.display = 'block';
+    }
+
+    function gerenciarSessao() {
+        if (localStorage.getItem('userRole')) {
+            localStorage.clear();
+            window.location.href = 'index.html';
+        } else {
+            window.location.href = 'login.html';
+        }
+    }
+
+    function obterItensSacola() {
+        return JSON.parse(localStorage.getItem('matuta_cart') || '[]');
+    }
+
+    function atualizarContadorSacola() {
+        const itens = obterItensSacola();
+        const contador = document.getElementById('sacolaContador');
+        if(contador) contador.innerText = itens.length;
+    }
+
+    function adicionarAoCarrinho() {
+        if (!produtoAtual) return;
+
+        let cart = obterItensSacola();
+
+        const itemSacola = {
+            id: produtoAtual.id,
+            nome: produtoAtual.nome,
+            preco: produtoAtual.preco,
+            tamanho: document.getElementById('produtoTamanho').value,
+            categoria: produtoAtual.categoria,
+            cor: document.getElementById('produtoCor').value,
+            foto: (produtoAtual.imagens && produtoAtual.imagens.length > 0) ? produtoAtual.imagens[0] : 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?q=80&w=500'
+        };
+
+        cart.push(itemSacola);
+        localStorage.setItem('matuta_cart', JSON.stringify(cart));
+
+        atualizarContadorSacola();
+        alert(`${produtoAtual.nome} foi adicionado à sua sacola!`);
+    }
+
+    async function carregarDetalhesProduto() {
+        if (!produtoId) { return; }
+        try {
+            const resposta = await fetch(API_URL);
+            const dados = await resposta.json();
+            const produtos = dados.content ? dados.content : dados;
+            produtoAtual = produtos.find(p => p.id == produtoId);
+
+            if (!produtoAtual) { window.location.href = 'index.html'; return; }
+
+            document.getElementById('produtoNome').value = produtoAtual.nome;
+            document.getElementById('produtoSku').innerText = `SKU: ${produtoAtual.sku}`;
+            document.getElementById('produtoPreco').value = produtoAtual.preco.toFixed(2);
+            document.getElementById('produtoCategoria').value = produtoAtual.categoria;
+            document.getElementById('produtoTamanho').value = produtoAtual.tamanho;
+            document.getElementById('produtoCor').value = produtoAtual.cor;
+            document.getElementById('produtoEstoque').value = produtoAtual.qtEstoque;
+
+            if (produtoAtual.imagens && produtoAtual.imagens.length > 0) {
+                document.getElementById('produtoFoto').src = produtoAtual.imagens[0];
+                document.getElementById('produtoFoto').alt = produtoAtual.nome;
+            }
+            document.getElementById('btnRemover').onclick = () => deletarRoupa(produtoAtual.id);
+        } catch (erro) {
+            console.error('Erro ao buscar detalhes:', erro);
+        }
+    }
+
+    async function salvarAlteracoesProduto() {
+        const novoNome = document.getElementById('produtoNome').value.trim();
+        const novoPreco = parseFloat(document.getElementById('produtoPreco').value);
+        const novaCategoria = document.getElementById('produtoCategoria').value;
+        const novoTamanho = document.getElementById('produtoTamanho').value;
+        const novaCor = document.getElementById('produtoCor').value.trim();
+        const novoEstoque = parseInt(document.getElementById('produtoEstoque').value);
+
+        if (!novoNome || isNaN(novoPreco) || novoPreco <= 0 || !novaCor || isNaN(novoEstoque)) {
+            alert('Preencha todos os campos com valores válidos antes de salvar.');
+            return;
+        }
+
+        const dadosAtualizados = {
+            nome: novoNome,
+            descricao: produtoAtual.descricao,
+            preco: novoPreco,
+            sku: produtoAtual.sku,
+            qtEstoque: novoEstoque,
+            tamanho: novoTamanho,
+            categoria: novaCategoria,
+            cor: novaCor,
+            imagens: produtoAtual.imagens
+        };
+
+        const resposta = await fetch(`${API_URL}/${produtoId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dadosAtualizados)
+        });
+
+        if (resposta.ok) {
+            alert('Informações do produto atualizadas com sucesso!');
+            window.location.reload();
+        } else {
+            alert('Erro ao atualizar as informações do produto.');
+        }
+    }
+
+    async function deletarRoupa(id) {
+        if (!confirm('Excluir peça do acervo?')) return;
+        const resposta = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+        if (resposta.ok) { window.location.href = 'index.html'; }
+    }
+
+    carregarDetalhesProduto().then(() => checarPermissoes());
+</script>
+</body>
+</html>
