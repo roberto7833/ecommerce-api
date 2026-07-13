@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matuta | Finalizar Compra</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Didot", "Playfair Display", Arial, sans-serif; }
+    body { background-color: #fcfbfa; color: #1c1a17; padding: 40px 20px; }
+
+    .checkout-container { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; }
+    @media (max-width: 850px) { .checkout-container { grid-template-columns: 1fr; } }
+
+    h2, h3 { font-family: "Playfair Display", serif; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
+    .box { background: #ffffff; padding: 30px; border: 1px solid #eae5df; margin-bottom: 20px; }
+
+    /* Opções de Entrega / Retirada */
+    .delivery-options { display: flex; gap: 15px; margin-bottom: 20px; }
+    .option-btn { flex: 1; padding: 15px; border: 1px solid #eae5df; background: #fcfbfa; text-align: center; cursor: pointer; font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; transition: all 0.2s; }
+    .option-btn.active { border-color: #1c1a17; background: #1c1a17; color: #ffffff; }
+
+    /* Formulários e Inputs */
+    .form-group { margin-bottom: 15px; }
+    label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; color: #575249; font-weight: bold; }
+    input, select { width: 100%; padding: 12px; border: 1px solid #eae5df; background: #fcfbfa; font-size: 13px; outline: none; }
+    input:focus, select:focus { border-color: #1c1a17; }
+    .row-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+    /* Métodos de Pagamento */
+    .payment-methods { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+    .payment-label { display: flex; align-items: center; gap: 10px; padding: 15px; border: 1px solid #eae5df; cursor: pointer; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+    .payment-label input { width: auto; }
+
+    /* Resumo do Pedido */
+    .item-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f4f0ea; font-size: 13px; }
+    .item-info { color: #575249; font-size: 11px; margin-top: 2px; }
+    .summary-line { display: flex; justify-content: space-between; margin: 15px 0; font-size: 14px; letter-spacing: 0.5px; }
+    .total-line { border-top: 1px solid #1c1a17; padding-top: 15px; font-size: 18px; font-weight: bold; }
+
+    .btn-confirmar { width: 100%; padding: 18px; background: #1c1a17; color: white; border: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; cursor: pointer; transition: opacity 0.2s; margin-top: 20px; }
+    .btn-confirmar:hover { opacity: 0.9; }
+    .btn-voltar { display: inline-block; margin-bottom: 20px; color: #575249; text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+  </style>
+</head>
+<body>
+
+<div style="max-width: 1100px; margin: 0 auto;">
+  <a href="index.html" class="btn-voltar">← Voltar ao acervo</a>
+</div>
+
+<main class="checkout-container">
+  <!-- Coluna Esquerda: Dados do Cliente -->
+  <section>
+    <div class="box">
+      <h3>Forma de Envio</h3>
+      <div class="delivery-options">
+        <div id="btnEntrega" class="option-btn active" onclick="setModoEnvio('ENTREGA')">Receber em Casa</div>
+        <div id="btnRetirada" class="option-btn" onclick="setModoEnvio('RETIRADA')">Buscar na Loja</div>
+      </div>
+
+      <!-- Formulário de Endereço -->
+      <div id="enderecoSection">
+        <div class="row-grid">
+          <div class="form-group">
+            <label>CEP</label>
+            <input type="text" id="cep" placeholder="00000-000">
+          </div>
+          <div class="form-group">
+            <label>Cidade</label>
+            <select id="cidade" onchange="atualizarBairros()">
+              <option value="">Selecione a cidade</option>
+              <option value="Mamanguape">Mamanguape</option>
+              <option value="Rio Tinto">Rio Tinto</option>
+              <option value="Outra">Outra Região</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Bairro</label>
+          <select id="bairro" onchange="calcularFrete()">
+            <option value="">Selecione primeiro a cidade</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Rua / Logradouro</label>
+          <input type="text" id="rua" placeholder="Ex: Rua Santo Antônio">
+        </div>
+
+        <div class="row-grid">
+          <div class="form-group">
+            <label>Número</label>
+            <input type="text" id="numero" placeholder="123">
+          </div>
+          <div class="form-group">
+            <label>Complemento (Opcional)</label>
+            <input type="text" id="complemento" placeholder="Ex: Casa, Apto">
+          </div>
+        </div>
+      </div>
+
+      <div id="retiradaAviso" style="display: none; color: #575249; font-size: 13px; line-height: 1.6;">
+        Ponto de retirada: <strong>Rua Santo Antônio, próximo à Praça da Juventude</strong>.<br>
+        Seu pedido estará pronto para retirada em até 1 dia útil após a confirmação.
+      </div>
+    </div>
+
+    <div class="box">
+      <h3>Forma de Pagamento</h3>
+      <div class="payment-methods">
+        <label class="payment-label">
+          <input type="radio" name="pagamento" value="Pix" checked> Pix
+        </label>
+        <label class="payment-label">
+          <input type="radio" name="pagamento" value="Cartão de Débito"> Cartão de Débito
+        </label>
+        <label class="payment-label">
+          <input type="radio" name="pagamento" value="Cartão de Crédito"> Cartão de Crédito
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <!-- Coluna Direita: Resumo do Pedido -->
+  <section class="box" style="height: fit-content;">
+    <h3>Resumo do Pedido</h3>
+    <div id="checkoutItens"></div>
+
+    <div style="margin-top: 20px;">
+      <div class="summary-line">
+        <span>Subtotal:</span>
+        <span id="checkoutSubtotal">R$ 0,00</span>
+      </div>
+      <div class="summary-line">
+        <span>Frete:</span>
+        <span id="checkoutFrete">R$ 0,00</span>
+      </div>
+      <div class="summary-line total-line">
+        <span>Total:</span>
+        <span id="checkoutTotal">R$ 0,00</span>
+      </div>
+    </div>
+
+    <button class="btn-confirmar" onclick="processarPedido()">Confirmar e Pagar</button>
+  </section>
+</main>
+
+<script>
+  let itensCarrinho = JSON.parse(localStorage.getItem('matuta_cart') || '[]');
+  let modoEnvio = 'ENTREGA';
+  let valorFrete = 0;
+  let valorSubtotal = 0;
+
+  // Tabela de frete simulada baseada na sua região
+  const tabelaFrete = {
+    "Mamanguape": {
+      "Centro": 0, // Grátis no Centro
+      "Planalto": 5.00,
+      "Areal": 4.00
+    },
+    "Rio Tinto": {
+      "Centro": 7.00,
+      "Vila Regina": 9.00
+    },
+    "Outra": {
+      "Geral": 15.00
+    }
+  };
+
+  function renderizarResumo() {
+    const container = document.getElementById('checkoutItens');
+    container.innerHTML = '';
+    valorSubtotal = 0;
+
+    if (itensCarrinho.length === 0) {
+      container.innerHTML = '<p style="color:#7a7265;">Nenhum produto na sacola.</p>';
+      setTimeout(() => window.location.href = 'index.html', 2000);
+      return;
+    }
+
+    itensCarrinho.forEach(item => {
+      valorSubtotal += item.preco;
+      container.innerHTML += `
+                    <div class="item-row">
+                        <div>
+                            <strong>${item.nome}</strong>
+                            <div class="item-info">Tam: ${item.tamanho} | Cor: ${item.cor}</div>
+                        </div>
+                        <div>R$ ${item.preco.toFixed(2)}</div>
+                    </div>
+                `;
+    });
+
+    document.getElementById('checkoutSubtotal').innerText = `R$ ${valorSubtotal.toFixed(2)}`;
+    atualizarValoresFinais();
+  }
+
+  function setModoEnvio(modo) {
+    modoEnvio = modo;
+    document.getElementById('btnEntrega').classList.toggle('active', modo === 'ENTREGA');
+    document.getElementById('btnRetirada').classList.toggle('active', modo === 'RETIRADA');
+
+    document.getElementById('enderecoSection').style.display = modo === 'ENTREGA' ? 'block' : 'none';
+    document.getElementById('retiradaAviso').style.display = modo === 'RETIRADA' ? 'block' : 'none';
+
+    if (modo === 'RETIRADA') {
+      valorFrete = 0;
+      document.getElementById('checkoutFrete').innerText = 'Grátis';
+    } else {
+      calcularFrete();
+    }
+    atualizarValoresFinais();
+  }
+
+  function atualizarBairros() {
+    const cidade = document.getElementById('cidade').value;
+    const selectBairro = document.getElementById('bairro');
+    selectBairro.innerHTML = '';
+
+    if (!cidade || !tabelaFrete[cidade]) {
+      selectBairro.innerHTML = '<option value="">Selecione uma cidade válida</option>';
+      valorFrete = 0;
+      atualizarValoresFinais();
+      return;
+    }
+
+    Object.keys(tabelaFrete[cidade]).forEach(bairro => {
+      selectBairro.innerHTML += `<option value="${bairro}">${bairro}</option>`;
+    });
+
+    calcularFrete();
+  }
+
+  function calcularFrete() {
+    if (modoEnvio === 'RETIRADA') return;
+
+    const cidade = document.getElementById('cidade').value;
+    const bairro = document.getElementById('bairro').value;
+
+    if (cidade && bairro && tabelaFrete[cidade] && tabelaFrete[cidade][bairro] !== undefined) {
+      valorFrete = tabelaFrete[cidade][bairro];
+      document.getElementById('checkoutFrete').innerText = valorFrete === 0 ? 'Grátis' : `R$ ${valorFrete.toFixed(2)}`;
+    } else {
+      valorFrete = 0;
+      document.getElementById('checkoutFrete').innerText = 'R$ 0,00';
+    }
+    atualizarValoresFinais();
+  }
+
+  function atualizarValoresFinais() {
+    const total = valorSubtotal + valorFrete;
+    document.getElementById('checkoutTotal').innerText = `R$ ${total.toFixed(2)}`;
+  }
+
+  function processarPedido() {
+    const formaPagamento = document.querySelector('input[name="pagamento"]:checked').value;
+
+    if (modoEnvio === 'ENTREGA') {
+      const cidade = document.getElementById('cidade').value;
+      const bairro = document.getElementById('bairro').value;
+      const rua = document.getElementById('rua').value.trim();
+      const numero = document.getElementById('numero').value.trim();
+
+      if (!cidade || !bairro || !rua || !numero) {
+        alert('Por favor, preencha todos os campos obrigatórios do endereço de entrega.');
+        return;
+      }
+    }
+
+    alert(`Pedido Confirmado!\nForma de Pagamento: ${formaPagamento}\nForma de Envio: ${modoEnvio === 'ENTREGA' ? 'Entrega Residencial' : 'Retirada na Loja'}\n\nObrigado por comprar na Matuta Boutique!`);
+    localStorage.removeItem('matuta_cart'); // Limpa a sacola após o sucesso
+    window.location.href = 'index.html';
+  }
+
+  renderizarResumo();
+</script>
+</body>
+</html>

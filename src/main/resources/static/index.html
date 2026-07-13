@@ -6,8 +6,9 @@
     <title>Matuta | Alta Costura & Minimalismo</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Didot", "Playfair Display", Arial, sans-serif; }
-        body { background-color: #fcfbfa; color: #1c1a17; padding-bottom: 60px; }
+        body { background-color: #fcfbfa; color: #1c1a17; padding-bottom: 0; }
 
+        /* Layout Simétrico do Cabeçalho */
         header {
             background-color: #ffffff;
             padding: 25px 50px;
@@ -89,6 +90,7 @@
             color: #ffffff !important;
         }
 
+        /* Sacola Container */
         .sacola-container {
             position: relative;
             cursor: pointer;
@@ -124,6 +126,7 @@
             justify-content: center;
         }
 
+        /* Sacola Drawer */
         .sacola-drawer {
             position: fixed;
             top: 0;
@@ -235,38 +238,182 @@
         }
         .btn-finalizar:hover { opacity: 0.9; }
 
+        /* Banner Principal */
         .hero-banner { position: relative; height: 450px; background-color: #eae5df; display: flex; align-items: center; justify-content: center; }
         .hero-bg { display: flex; width: 100%; height: 100%; position: absolute; justify-content: space-between; }
         .hero-bg img { height: 100%; width: 50%; object-fit: cover; }
         .hero-content { position: relative; z-index: 2; text-align: center; color: #ffffff; background: rgba(28, 26, 23, 0.2); padding: 40px; backdrop-filter: blur(4px); }
         .hero-content h1 { font-size: 55px; font-weight: 300; letter-spacing: 8px; margin-bottom: 15px; text-transform: uppercase; }
         .hero-content p { font-size: 14px; letter-spacing: 3px; margin-bottom: 30px; text-transform: uppercase; font-weight: 300; }
-        .hero-btn { background-color: #ffffff; color: #1c1a17; border: none; padding: 14px 45px; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: background 0.2s; }
-        .hero-btn:hover { background-color: #1c1a17; color: #ffffff; }
+        .hero-banner .hero-btn { background-color: #ffffff; color: #1c1a17; border: none; padding: 14px 45px; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: background 0.2s; }
+        .hero-banner .hero-btn:hover { background-color: #1c1a17; color: #ffffff; }
 
+        /* Botão Flutuante de Customizar do Banner */
+        .banner-trigger {
+            display: none;
+            position: absolute;
+            top: 30px;
+            right: 50px;
+            background: #1c1a17;
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 22px;
+            cursor: pointer;
+            z-index: 10;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        /* Vitrine Grid */
         .vitrine-section { max-width: 1400px; margin: 60px auto; padding: 0 50px; }
         .vitrine-title { text-align: center; font-size: 24px; font-weight: 300; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 50px; }
         .products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; }
 
+        /* Card do Produto com mini-carrosel */
         .product-card { background: transparent; position: relative; text-decoration: none; color: inherit; display: block; }
         .img-wrapper { position: relative; width: 100%; background-color: #f4f0ea; aspect-ratio: 3/4; overflow: hidden; }
-        .img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
-        .product-card:hover .img-wrapper img { transform: scale(1.03); }
+        .img-wrapper img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .img-wrapper img.active { display: block; }
+
+        /* Setinhas minimalistas no card */
+        .card-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255, 255, 255, 0.8); border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; opacity: 0; transition: opacity 0.2s; z-index: 5; }
+        .product-card:hover .card-arrow { opacity: 1; }
+        .card-arrow-left { left: 10px; }
+        .card-arrow-right { right: 10px; }
 
         .product-info { padding: 15px 0 0 0; }
         .product-name { font-size: 14px; color: #1c1a17; margin-bottom: 6px; font-weight: bold; }
         .product-details { font-size: 12px; color: #7a7265; margin-bottom: 6px; }
         .product-price { font-size: 15px; color: #1c1a17; margin-bottom: 10px; }
 
-        .admin-trigger { display: none; position: fixed; bottom: 30px; right: 30px; background: #1c1a17; color: white; border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 24px; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; }
+        /* Botão Flutuante de Peças */
+        .admin-trigger { display: none; position: fixed; bottom: 30px; right: 30px; background: #1c1a17; color: white; border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 24px; cursor: pointer; z-index: 10; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
 
-        /* Ajuste do z-index para 101 garantindo que fique à frente do overlay */
-        .admin-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); z-index: 101; width: 450px; border: 1px solid #eae5df; max-height: 90vh; overflow-y: auto; }
-        .admin-modal input, .admin-modal select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #eae5df; background: #fcfbfa; }
-        .admin-modal button { width: 100%; padding: 14px; background: #1c1a17; color: white; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; }
+        /* Modais */
+        .admin-modal, .banner-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); z-index: 101; width: 450px; border: 1px solid #eae5df; max-height: 90vh; overflow-y: auto; }
+        .admin-modal input, .admin-modal select, .banner-modal input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #eae5df; background: #fcfbfa; font-size: 13px; outline: none; }
+        .admin-modal button, .banner-modal button { width: 100%; padding: 14px; background: #1c1a17; color: white; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; }
 
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 90; }
-        .file-label { font-size: 12px; color: #575249; display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .file-label { font-size: 11px; color: #575249; display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
+
+        /* Botão do WhatsApp Estilo Preenchido de Referência - Canto Esquerdo Inferior */
+        .whatsapp-btn-fixed {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background-color: #25D366;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            transition: transform 0.2s;
+        }
+        .whatsapp-btn-fixed:hover {
+            transform: scale(1.1);
+        }
+        .whatsapp-btn-fixed svg {
+            width: 32px;
+            height: 32px;
+            fill: #ffffff;
+        }
+
+        /* CONFIGURAÇÃO DO NOVO RODAPÉ (FOOTER) MINIMALISTA */
+        .main-footer {
+            background-color: #f7f3ee;
+            border-top: 1px solid #eae5df;
+            padding: 60px 50px 30px 50px;
+            width: 100%;
+            margin-top: 100px;
+        }
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .footer-logo {
+            font-family: "Playfair Display", serif;
+            font-size: 24px;
+            letter-spacing: 4px;
+            color: #1c1a17;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+        .footer-instagram {
+            color: #1c1a17;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            transition: opacity 0.2s;
+        }
+        .footer-instagram:hover { opacity: 0.7; }
+        .footer-instagram svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+        .footer-info-text {
+            font-size: 13px;
+            color: #575249;
+            line-height: 1.8;
+            letter-spacing: 0.5px;
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+        .footer-info-text a {
+            color: inherit;
+            text-decoration: none;
+        }
+        .footer-info-text a:hover { text-decoration: underline; }
+
+        /* Selos de Cartões e Envio */
+        .footer-badges {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #eae5df;
+            padding-bottom: 40px;
+            width: 100%;
+        }
+        .badge-card-icon {
+            height: 22px;
+            object-fit: contain;
+            filter: grayscale(20%);
+            opacity: 0.85;
+        }
+
+        /* Linha de Créditos Inferior */
+        .footer-bottom-credits {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: #7a7265;
+            letter-spacing: 0.5px;
+        }
+        .credits-dev {
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
@@ -317,16 +464,19 @@
     </div>
 </div>
 
+<!-- Banner Principal Estático -->
 <section class="hero-banner">
     <div class="hero-bg">
-        <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=800" alt="Banner 1">
-        <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=800" alt="Banner 2">
+        <img id="bannerImg1" src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=800" alt="Banner 1">
+        <img id="bannerImg2" src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=800" alt="Banner 2">
     </div>
     <div class="hero-content">
-        <h1>MATUTA</h1>
-        <p>PEÇAS EXCLUSIVAS</p>
+        <h1 id="bannerTxtTitulo">MATUTA</h1>
+        <p id="bannerTxtSub">PEÇAS EXCLUSIVAS</p>
         <button class="hero-btn" onclick="rolarParaDestaques()">ACERVO</button>
     </div>
+
+    <button id="btnBannerFlutuante" class="banner-trigger" onclick="toggleBannerModal(true)">+</button>
 </section>
 
 <main class="vitrine-section" id="secaoDestaques">
@@ -334,9 +484,10 @@
     <div id="productsGrid" class="products-grid"></div>
 </main>
 
-<button id="btnAdminFlutuante" class="admin-trigger" onclick="toggleAdmin(true)">+</button>
+<button id="btnAdminFlutuante" class="admin-trigger" onclick="toggleAdminModal(true)">+</button>
 <div id="overlay" class="overlay" onclick="fecharModais()"></div>
 
+<!-- MODAL 1: ADICIONAR PEÇAS -->
 <div id="adminModal" class="admin-modal">
     <h3>Adicionar Peça</h3>
     <form id="roupaForm">
@@ -344,7 +495,7 @@
         <input type="text" id="sku" placeholder="SKU Único" required>
         <input type="number" step="0.01" id="preco" placeholder="Preço (R$)" required>
         <input type="number" id="qtEstoque" placeholder="Quantidade Estoque" required>
-        <input type="text" id="cor" placeholder="Cor" required>
+        <input type="text" id="cor" placeholder="Cores separadas por vírgula (Ex: Preta, Branca)" required>
 
         <label class="file-label">Selecione o Tamanho:</label>
         <select id="tamanho" required>
@@ -363,11 +514,73 @@
             <option value="ACESSORIOS">ACESSÓRIOS</option>
         </select>
 
-        <label class="file-label">Escolha a Foto do Produto:</label>
+        <label class="file-label">Escolha a Foto Principal do Produto (Capa):</label>
         <input type="file" id="fotoArquivo" accept="image/*" required>
         <button type="submit">Salvar no Acervo</button>
     </form>
 </div>
+
+<!-- MODAL 2: ATUALIZAR BANNER -->
+<div id="bannerModal" class="banner-modal">
+    <h3>Personalizar Banner</h3>
+    <form id="bannerForm">
+        <input type="text" id="customTitulo" placeholder="Mudar título (Ex: MATUTA)">
+        <input type="text" id="customSubtitulo" placeholder="Mudar subtítulo (Ex: PROMOÇÃO OUTONO)">
+
+        <label class="file-label">Trocar Foto Esquerda:</label>
+        <input type="file" id="customFile1" accept="image/*">
+
+        <label class="file-label">Trocar Foto Direita:</label>
+        <input type="file" id="customFile2" accept="image/*">
+
+        <button type="button" onclick="salvarConfiguracoesBanner()">Atualizar Banner</button>
+        <button type="button" onclick="limparBannerConfig()" style="background:#dc3545; margin-top:10px;">Resetar Padrão</button>
+    </form>
+</div>
+
+<!-- ESTRUTURA COMPLETA DO NOVO RODAPÉ (FOOTER) SOLICITADO -->
+<footer class="main-footer">
+    <div class="footer-container">
+        <div class="footer-logo">Matuta Boutique</div>
+
+        <!-- Link do Instagram da Loja -->
+        <a href="https://www.instagram.com/" class="footer-instagram" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051c-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+            </svg>
+        </a>
+
+        <!-- Bloco de Texto com Telefone, Email e Endereço da Loja -->
+        <div class="footer-info-text">
+            <a href="https://wa.me/558391865522" target="_blank">5583986850191</a><br>
+            <a href="mailto:roberto.lima1236@gmail.com">roberto.lima1236@gmail.com</a><br>
+            Rua Pedro Soares Feliciano, prox praça da juventude
+        </div>
+
+        <!-- Selos/Bandeiras dos Cartões Aceitos e Envio -->
+        <div class="footer-badges">
+            <img class="badge-card-icon" src="https://img.icons8.com/color/48/visa.png" alt="Visa">
+            <img class="badge-card-icon" src="https://img.icons8.com/color/48/mastercard.png" alt="Mastercard">
+            <img class="badge-card-icon" src="https://img.icons8.com/color/48/bradesco.png" alt="Bradesco">
+            <img class="badge-card-icon" src="https://img.icons8.com/color/48/elo.png" alt="Elo">
+            <img class="badge-card-icon" src="https://img.icons8.com/color/48/hipercard.png" alt="Hipercard">
+            <img class="badge-card-icon" src="https://img.icons8.com/cards/50/pix.png" alt="Pix">
+        </div>
+
+        <!-- Linha de Direitos Autorais e Crédito de Criação -->
+        <div class="footer-bottom-credits">
+            <div class="credits-dev">Criado por Roberto Junior - <a href="https://wa.me/55839684000121" target="_blank" style="color: inherit; text-decoration: none;">50959684000121</a></div>
+            <div>© 2026. Todos os direitos reservados.</div>
+        </div>
+    </div>
+</footer>
+
+<!-- Botão do WhatsApp Tradicional Preenchido - Canto Esquerdo Inferior -->
+<a href="https://wa.me/5583986850191" class="whatsapp-btn-fixed" target="_blank" rel="noopener noreferrer">
+    <svg viewBox="0 0 32 32">
+        <path d="M16 2a13 13 0 0 0-11.4 19.24l-1.6 5.86 6-1.57A13 13 0 1 0 16 2zm6.75 18.57c-.28.78-1.4 1.42-2 1.48s-1.15.22-3.83-.84a15.23 15.23 0 0 1-5.3-4.63 6.3 6.3 0 0 1-1.3-3.32 3.52 3.52 0 0 1 1.1-2.63l.4-.4a1.08 1.08 0 0 1 .78-.32h.44a.8.8 0 0 1 .6.28l1.3 3.12a.84.84 0 0 1 0 .7l-.54.8c-.14.2-.3.42-.1.74a10.09 10.09 0 0 0 1.93 2.38 8.44 8.44 0 0 0 2.8 1.73c.34.16.54.14.74-.1l.82-1.1c.2-.28.46-.24.72-.14l3.24 1.6a.79.79 0 0 1 .4.72.63.63 0 0 1-.03.53z"/>
+    </svg>
+</a>
 
 <script>
     const API_URL = 'http://localhost:8080/todos';
@@ -377,15 +590,18 @@
         const role = localStorage.getItem('userRole');
         const authBtn = document.getElementById('authBtn');
         const btnAdminFlutuante = document.getElementById('btnAdminFlutuante');
+        const btnBannerFlutuante = document.getElementById('btnBannerFlutuante');
         const abaSacola = document.getElementById('abaSacola');
 
         if (role) {
             authBtn.innerText = 'Sair';
             btnAdminFlutuante.style.display = (role === 'VENDEDOR') ? 'flex' : 'none';
+            btnBannerFlutuante.style.display = (role === 'VENDEDOR') ? 'flex' : 'none';
             abaSacola.style.display = (role === 'CLIENTE') ? 'block' : 'none';
         } else {
             authBtn.innerText = 'Login';
             btnAdminFlutuante.style.display = 'none';
+            btnBannerFlutuante.style.display = 'none';
             abaSacola.style.display = 'none';
         }
         atualizarContadorSacola();
@@ -393,15 +609,21 @@
 
     function gerenciarSessao() {
         if (localStorage.getItem('userRole')) {
-            localStorage.clear();
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userName');
             window.location.reload();
         } else {
             window.location.href = 'login.html';
         }
     }
 
-    function toggleAdmin(show) {
+    function toggleAdminModal(show) {
         document.getElementById('adminModal').style.display = show ? 'block' : 'none';
+        document.getElementById('overlay').style.display = show ? 'block' : 'none';
+    }
+
+    function toggleBannerModal(show) {
+        document.getElementById('bannerModal').style.display = show ? 'block' : 'none';
         document.getElementById('overlay').style.display = show ? 'block' : 'none';
     }
 
@@ -419,7 +641,8 @@
     }
 
     function fecharModais() {
-        toggleAdmin(false);
+        toggleAdminModal(false);
+        toggleBannerModal(false);
         toggleSacola(false);
     }
 
@@ -474,11 +697,91 @@
         renderizarSacola();
     }
 
+    // NOVA LÓGICA DO CHECKOUT APLICADA NO LOCAL SOLICITADO
     function finalizarCompra() {
-        alert('Pedido recebido! Obrigado por comprar na Matuta Boutique.');
-        localStorage.removeItem('matuta_cart');
-        fecharModais();
-        atualizarContadorSacola();
+        const itens = obterItensSacola();
+        if (itens.length === 0) {
+            alert('Sua sacola está vazia!');
+            return;
+        }
+        // Redireciona o cliente para a nova tela de finalização
+        window.location.href = 'checkout.html';
+    }
+
+    function aplicarConfiguracoesBannerSalvas() {
+        const tituloSalvo = localStorage.getItem('banner_titulo');
+        const subSalvo = localStorage.getItem('banner_subtitulo');
+        const foto1Salva = localStorage.getItem('banner_foto1');
+        const foto2Salva = localStorage.getItem('banner_foto2');
+
+        if(tituloSalvo) document.getElementById('bannerTxtTitulo').innerText = tituloSalvo;
+        if(subSalvo) document.getElementById('bannerTxtSub').innerText = subSalvo;
+        if(foto1Salva) document.getElementById('bannerImg1').src = foto1Salva;
+        if(foto2Salva) document.getElementById('bannerImg2').src = foto2Salva;
+    }
+
+    function salvarConfiguracoesBanner() {
+        const titulo = document.getElementById('customTitulo').value.trim();
+        const subtitulo = document.getElementById('customSubtitulo').value.trim();
+        const file1 = document.getElementById('customFile1').files[0];
+        const file2 = document.getElementById('customFile2').files[0];
+
+        if(titulo) localStorage.setItem('banner_titulo', titulo);
+        if(subtitulo) localStorage.setItem('banner_subtitulo', subtitulo);
+
+        let promises = [];
+
+        if(file1) {
+            promises.push(new Promise((resolve) => {
+                const r = new FileReader();
+                r.onloadend = () => { localStorage.setItem('banner_foto1', r.result); resolve(); };
+                r.readAsDataURL(file1);
+            }));
+        }
+        if(file2) {
+            promises.push(new Promise((resolve) => {
+                const r = new FileReader();
+                r.onloadend = () => { localStorage.setItem('banner_foto2', r.result); resolve(); };
+                r.readAsDataURL(file2);
+            }));
+        }
+
+        Promise.all(promises).then(() => {
+            alert('Banner updated successfully!');
+            fecharModais();
+            aplicarConfiguracoesBannerSalvas();
+        });
+    }
+
+    function limparBannerConfig() {
+        localStorage.removeItem('banner_titulo');
+        localStorage.removeItem('banner_subtitulo');
+        localStorage.removeItem('banner_foto1');
+        localStorage.removeItem('banner_foto2');
+        window.location.reload();
+    }
+
+    function passarFotoCard(event, produtoId, direcao) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const wrapper = document.getElementById(`wrapper-${produtoId}`);
+        const imagens = wrapper.querySelectorAll('img');
+        let indexAtivo = 0;
+
+        imagens.forEach((img, index) => {
+            if (img.classList.contains('active')) {
+                indexAtivo = index;
+            }
+        });
+
+        imagens[indexAtivo].classList.remove('active');
+
+        let novoIndex = indexAtivo + direcao;
+        if (novoIndex >= imagens.length) novoIndex = 0;
+        if (novoIndex < 0) novoIndex = imagens.length - 1;
+
+        imagens[novoIndex].classList.add('active');
     }
 
     async function renderizarVitrine(listaParaExibir) {
@@ -492,11 +795,27 @@
         }
 
         produtos.forEach(p => {
-            const foto = (p.imagens && p.imagens.length > 0) ? p.imagens[0] : 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?q=80&w=500';
+            let htmlImagens = '';
+            const temImagens = p.imagens || p.images;
+            const listaImagens = (temImagens && temImagens.length > 0) ? temImagens : ['https://images.unsplash.com/photo-1434389677669-e08b4cac3105?q=80&w=500'];
+
+            listaImagens.forEach((imgUrl, idx) => {
+                htmlImagens += `<img src="${imgUrl}" alt="${p.nome}" class="${idx === 0 ? 'active' : ''}">`;
+            });
+
+            let htmlSetas = '';
+            if (listaImagens.length > 1) {
+                htmlSetas = `
+                        <button class="card-arrow card-arrow-left" onclick="passarFotoCard(event, ${p.id}, -1)">&#10094;</button>
+                        <button class="card-arrow card-arrow-right" onclick="passarFotoCard(event, ${p.id}, 1)">&#10095;</button>
+                    `;
+            }
+
             grid.innerHTML += `
                     <a href="produto.html?id=${p.id}" class="product-card">
-                        <div class="img-wrapper">
-                            <img src="${foto}" alt="${p.nome}">
+                        <div class="img-wrapper" id="wrapper-${p.id}">
+                            ${htmlImagens}
+                            ${htmlSetas}
                         </div>
                         <div class="product-info">
                             <div class="product-name">${p.nome}</div>
@@ -527,11 +846,7 @@
             titulo.innerText = 'DESTAQUES';
             renderizarVitrine(produtosLocais);
         } else {
-            if (categoriaEnum === 'NOVA_COLECO') {
-                titulo.innerText = 'NOVA COLEÇÃO';
-            } else {
-                titulo.innerText = categoriaEnum.replace('_', ' ');
-            }
+            titulo.innerText = categoriaEnum.replace('_', ' ');
             const filtrados = produtosLocais.filter(p => p.categoria === categoriaEnum);
             renderizarVitrine(filtrados);
         }
@@ -540,12 +855,9 @@
 
     document.getElementById('inputBusca').addEventListener('input', (e) => {
         const termoBusca = e.target.value.toLowerCase().trim();
-        document.getElementById('tituloVitrine').innerText = termoBusca ? 'RESULTADOS DA BUSCA' : 'DESTAQUES';
-
         const produtosFiltrados = produtosLocais.filter(p =>
             p.nome.toLowerCase().includes(termoBusca) ||
-            p.cor.toLowerCase().includes(termoBusca) ||
-            p.sku.toLowerCase().includes(termoBusca)
+            p.cor.toLowerCase().includes(termoBusca)
         );
         renderizarVitrine(produtosFiltrados);
     });
@@ -568,6 +880,7 @@
 
         const formData = new FormData();
         formData.append("data", new Blob([JSON.stringify(roupaData)], { type: "application/json" }));
+
         if (fileInput) {
             formData.append("foto", fileInput);
         }
@@ -588,6 +901,7 @@
 
     checarPermissoes();
     carregarDados();
+    aplicarConfiguracoesBannerSalvas();
 </script>
 </body>
 </html>
