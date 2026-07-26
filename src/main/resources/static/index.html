@@ -1,3 +1,584 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matuta | Alta Costura & Minimalismo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Didot", "Playfair Display", Arial, sans-serif; }
+        body { background-color: #fcfbfa; color: #1c1a17; padding-bottom: 0; }
+
+        header {
+            background-color: #ffffff;
+            padding: 25px 50px;
+            border-bottom: 1px solid #eae5df;
+            width: 100%;
+        }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: auto;
+            width: 100%;
+        }
+        .logo {
+            font-size: 28px;
+            letter-spacing: 5px;
+            color: #1c1a17;
+            text-decoration: none;
+            font-family: "Playfair Display", serif;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+            align-items: center;
+            margin-left: auto;
+        }
+        .nav-links li {
+            font-size: 12px;
+            cursor: pointer;
+            color: #575249;
+            transition: color 0.2s;
+            white-space: nowrap;
+        }
+        .nav-links li.uppercase {
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        .nav-links li:hover {
+            color: #1c1a17;
+            font-weight: bold;
+        }
+
+        .search-container {
+            width: 200px;
+            margin-right: 10px;
+        }
+        .search-container input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #eae5df;
+            background-color: #fcfbfa;
+            font-size: 12px;
+            outline: none;
+        }
+        .search-container input::placeholder {
+            color: #7a7265;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 10px;
+        }
+
+        .btn-auth {
+            font-size: 11px !important;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border: 1px solid #1c1a17;
+            padding: 8px 18px;
+            transition: all 0.2s;
+            display: inline-block;
+            text-align: center;
+        }
+        .btn-auth:hover {
+            background: #1c1a17;
+            color: #ffffff !important;
+        }
+
+        .sacola-container {
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 5px;
+            color: #1c1a17;
+        }
+        .sacola-container svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.5;
+        }
+        .sacola-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background-color: #1c1a17;
+            color: #ffffff;
+            font-family: sans-serif;
+            font-size: 9px;
+            font-weight: bold;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sacola-drawer {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background-color: #ffffff;
+            box-shadow: -5px 0 30px rgba(0,0,0,0.05);
+            z-index: 100;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid #eae5df;
+        }
+        .sacola-drawer.open {
+            right: 0;
+        }
+        .drawer-header {
+            padding: 30px;
+            border-bottom: 1px solid #eae5df;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .drawer-header h3 {
+            font-family: "Playfair Display", serif;
+            font-size: 18px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .btn-close-drawer {
+            background: transparent;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #7a7265;
+        }
+        .drawer-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+        .cart-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #f4f0ea;
+            align-items: center;
+        }
+        .cart-item-img {
+            width: 60px;
+            aspect-ratio: 3/4;
+            background-color: #f4f0ea;
+            object-fit: cover;
+        }
+        .cart-item-info {
+            flex: 1;
+        }
+        .cart-item-name {
+            font-size: 13px;
+            font-weight: bold;
+            color: #1c1a17;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .cart-item-meta {
+            font-size: 11px;
+            color: #7a7265;
+        }
+        .cart-item-price {
+            font-size: 13px;
+            color: #1c1a17;
+            margin-top: 5px;
+        }
+        .btn-remove-item {
+            background: transparent;
+            border: none;
+            color: #dc3545;
+            font-size: 11px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .drawer-footer {
+            padding: 30px;
+            border-top: 1px solid #eae5df;
+            background-color: #fcfbfa;
+        }
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 15px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+        .btn-finalizar {
+            width: 100%;
+            padding: 16px;
+            background-color: #1c1a17;
+            color: #ffffff;
+            border: none;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-finalizar:hover { opacity: 0.9; }
+
+        .hero-banner {
+            position: relative;
+            height: 450px;
+            background-color: #dcd8d2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero-bg {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            justify-content: space-between;
+            background-color: #dcd8d2;
+        }
+        .hero-bg img {
+            height: 100%;
+            width: 50%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .hero-content { position: relative; z-index: 2; text-align: center; color: #ffffff; background: rgba(28, 26, 23, 0.3); padding: 40px; backdrop-filter: blur(4px); }
+        .hero-content h1 { font-size: 55px; font-weight: 300; letter-spacing: 8px; margin-bottom: 15px; text-transform: uppercase; }
+        .hero-content p { font-size: 14px; letter-spacing: 3px; margin-bottom: 30px; text-transform: uppercase; font-weight: 300; }
+        .hero-banner .hero-btn { background-color: #ffffff; color: #1c1a17; border: none; padding: 14px 45px; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: background 0.2s; }
+        .hero-banner .hero-btn:hover { background-color: #1c1a17; color: #ffffff; }
+
+        .banner-trigger {
+            display: none;
+            position: absolute;
+            top: 30px;
+            right: 50px;
+            background: #1c1a17;
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 22px;
+            cursor: pointer;
+            z-index: 10;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .vitrine-section { max-width: 1400px; margin: 60px auto; padding: 0 50px; }
+        .vitrine-title { text-align: center; font-size: 24px; font-weight: 300; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 50px; }
+        .products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; }
+
+        .product-card { background: transparent; position: relative; text-decoration: none; color: inherit; display: block; }
+        .img-wrapper { position: relative; width: 100%; background-color: #f4f0ea; aspect-ratio: 3/4; overflow: hidden; }
+        .img-wrapper img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .img-wrapper img.active { display: block; }
+
+        .card-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255, 255, 255, 0.8); border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; opacity: 0; transition: opacity 0.2s; z-index: 5; }
+        .product-card:hover .card-arrow { opacity: 1; }
+        .card-arrow-left { left: 10px; }
+        .card-arrow-right { right: 10px; }
+
+        .product-info { padding: 15px 0 0 0; }
+        .product-name { font-size: 14px; color: #1c1a17; margin-bottom: 6px; font-weight: bold; }
+        .product-details { font-size: 12px; color: #7a7265; margin-bottom: 6px; }
+        .product-price { font-size: 15px; color: #1c1a17; margin-bottom: 10px; }
+
+        .admin-trigger { display: none; position: fixed; bottom: 30px; right: 30px; background: #1c1a17; color: white; border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 24px; cursor: pointer; z-index: 10; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+
+        .admin-modal, .banner-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); z-index: 101; width: 450px; border: 1px solid #eae5df; max-height: 90vh; overflow-y: auto; }
+        .admin-modal input, .admin-modal select, .banner-modal input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #eae5df; background: #fcfbfa; font-size: 13px; outline: none; }
+        .admin-modal button, .banner-modal button { width: 100%; padding: 14px; background: #1c1a17; color: white; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; }
+
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 90; }
+        .file-label { font-size: 11px; color: #575249; display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
+
+        .whatsapp-btn-fixed {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background-color: #25D366;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            transition: transform 0.2s;
+        }
+        .whatsapp-btn-fixed:hover {
+            transform: scale(1.1);
+        }
+        .whatsapp-btn-fixed svg {
+            width: 32px;
+            height: 32px;
+            fill: #ffffff;
+        }
+
+        .main-footer {
+            background-color: #f7f3ee;
+            border-top: 1px solid #eae5df;
+            padding: 60px 50px 30px 50px;
+            width: 100%;
+            margin-top: 100px;
+        }
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .footer-logo {
+            font-family: "Playfair Display", serif;
+            font-size: 24px;
+            letter-spacing: 4px;
+            color: #1c1a17;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+        .footer-instagram {
+            color: #1c1a17;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            transition: opacity 0.2s;
+        }
+        .footer-instagram:hover { opacity: 0.7; }
+        .footer-instagram svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+        .footer-info-text {
+            font-size: 13px;
+            color: #575249;
+            line-height: 1.8;
+            letter-spacing: 0.5px;
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+        .footer-info-text a {
+            color: inherit;
+            text-decoration: none;
+        }
+        .footer-info-text a:hover { text-decoration: underline; }
+
+        .footer-badges {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #eae5df;
+            padding-bottom: 40px;
+            width: 100%;
+        }
+        .badge-card-icon {
+            height: 22px;
+            object-fit: contain;
+            filter: grayscale(20%);
+            opacity: 0.85;
+        }
+
+        .footer-bottom-credits {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: #7a7265;
+            letter-spacing: 0.5px;
+        }
+        .credits-dev {
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-container">
+        <div class="logo" onclick="filtrarCategoria('ALL')">MATUTA BOUTIQUE</div>
+        <ul class="nav-links">
+            <li>
+                <div class="search-container">
+                    <input type="text" id="inputBusca" placeholder="Buscar na Matuta...">
+                </div>
+            </li>
+            <li class="uppercase" onclick="filtrarCategoria('NOVA_COLECO')">NOVA COLEÇÃO</li>
+            <li class="uppercase" onclick="filtrarCategoria('VESTIDOS')">VESTIDOS</li>
+            <li class="uppercase" onclick="filtrarCategoria('MODA_FEMININA')">moda feminina</li>
+            <li class="uppercase" onclick="filtrarCategoria('MODA_MASCULINA')">moda masculina</li>
+            <li class="uppercase" onclick="filtrarCategoria('ACESSORIOS')">ACESSÓRIOS</li>
+
+            <li id="abaSacola" style="display: none;">
+                <button class="sacola-container" onclick="toggleSacola(true)">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                    <span id="sacolaContador" class="sacola-badge">0</span>
+                </button>
+            </li>
+
+            <li id="authBtn" class="btn-auth" onclick="gerenciarSessao()">Login</li>
+        </ul>
+    </div>
+</header>
+
+<div id="sacolaDrawer" class="sacola-drawer">
+    <div class="drawer-header">
+        <h3>Sua Sacola</h3>
+        <button class="btn-close-drawer" onclick="toggleSacola(false)">✕</button>
+    </div>
+    <div id="drawerContent" class="drawer-content"></div>
+    <div class="drawer-footer">
+        <div class="total-row">
+            <span>Total:</span>
+            <span id="sacolaTotal">R$ 0,00</span>
+        </div>
+        <button class="btn-finalizar" onclick="finalizarCompra()">Finalizar Compra</button>
+    </div>
+</div>
+
+<section class="hero-banner">
+    <div class="hero-bg">
+        <img id="bannerImg1" alt="Banner Esquerda">
+        <img id="bannerImg2" alt="Banner Direita">
+    </div>
+    <div class="hero-content">
+        <h1 id="bannerTxtTitulo">MATUTA</h1>
+        <p id="bannerTxtSub">PEÇAS EXCLUSIVAS</p>
+        <button class="hero-btn" onclick="rolarParaDestaques()">ACERVO</button>
+    </div>
+
+    <button id="btnBannerFlutuante" class="banner-trigger" onclick="toggleBannerModal(true)">+</button>
+</section>
+
+<main class="vitrine-section" id="secaoDestaques">
+    <div class="vitrine-title" id="tituloVitrine">DESTAQUES</div>
+    <div id="productsGrid" class="products-grid"></div>
+</main>
+
+<button id="btnAdminFlutuante" class="admin-trigger" onclick="toggleAdminModal(true)">+</button>
+<div id="overlay" class="overlay" onclick="fecharModais()"></div>
+
+<div id="adminModal" class="admin-modal">
+    <h3>Adicionar Peça</h3>
+    <form id="roupaForm">
+        <input type="text" id="nome" placeholder="Nome da Peça" required>
+        <input type="text" id="sku" placeholder="SKU Único" required>
+        <input type="text" id="preco" placeholder="Preço (Ex: 109.99)" required>
+        <input type="number" id="qtEstoque" placeholder="Quantidade Estoque" required>
+        <input type="text" id="cor" placeholder="Cores separadas por vírgula (Ex: Preta, Branca)" required>
+
+        <label class="file-label">Selecione o Tamanho:</label>
+        <select id="tamanho" required>
+            <option value="P">P</option>
+            <option value="M">M</option>
+            <option value="G">G</option>
+            <option value="GG">GG</option>
+        </select>
+
+        <label class="file-label">Selecione a Categoria:</label>
+        <select id="categoria" required>
+            <option value="NOVA_COLECO">NOVA COLEÇÃO</option>
+            <option value="VESTIDOS">VESTIDOS</option>
+            <option value="MODA_FEMININA">MODA FEMININA</option>
+            <option value="MODA_MASCULINA">MODA MASCULINA</option>
+            <option value="ACESSORIOS">ACESSÓRIOS</option>
+        </select>
+
+        <label class="file-label">Escolha a Foto Principal do Produto (Capa):</label>
+        <input type="file" id="fotoArquivo" accept="image/*" required>
+        <button type="submit">Salvar no Acervo</button>
+    </form>
+</div>
+
+<div id="bannerModal" class="banner-modal">
+    <h3>Personalizar Banner</h3>
+    <form id="bannerForm">
+        <input type="text" id="customTitulo" placeholder="Mudar título (Ex: MATUTA)">
+        <input type="text" id="customSubtitulo" placeholder="Mudar subtítulo (Ex: PROMOÇÃO OUTONO)">
+
+        <label class="file-label">Trocar Foto Esquerda:</label>
+        <input type="file" id="customFile1" accept="image/*">
+
+        <label class="file-label">Trocar Foto Direita:</label>
+        <input type="file" id="customFile2" accept="image/*">
+
+        <button type="button" onclick="salvarConfiguracoesBanner()">Atualizar Banner</button>
+        <button type="button" onclick="limparBannerConfig()" style="background:#dc3545; margin-top:10px;">Resetar Padrão (Sem fotos)</button>
+    </form>
+</div>
+
+<footer class="main-footer">
+    <div class="footer-container">
+        <div class="footer-logo">Matuta Boutique</div>
+
+        <a href="https://www.instagram.com/" class="footer-instagram" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051c-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+            </svg>
+        </a>
+
+        <div class="footer-info-text">
+            <a href="https://wa.me/5583986850191" target="_blank">5583986850191</a><br>
+            <a href="mailto:roberto.lima1236@gmail.com">roberto.lima1236@gmail.com</a><br>
+            Rua Pedro Soares Feliciano, prox praça da juventude
+        </div>
+
+        <div class="footer-badges">
+            <img class="badge-card-icon" src="https://img.icons8.com/color/48/visa.png" alt="Visa">
+            <img class="badge-card-icon" src="https://img.icons8.com/color/48/mastercard.png" alt="Mastercard">
+            <img class="badge-card-icon" src="https://img.icons8.com/color/48/bradesco.png" alt="Bradesco">
+            <img class="badge-card-icon" src="https://img.icons8.com/color/48/elo.png" alt="Elo">
+            <img class="badge-card-icon" src="https://img.icons8.com/color/48/hipercard.png" alt="Hipercard">
+            <img class="badge-card-icon" src="https://img.icons8.com/cards/50/pix.png" alt="Pix">
+        </div>
+
+        <div class="footer-bottom-credits">
+            <div class="credits-dev">Criado por Roberto Junior - <a href="https://wa.me/55839684000121" target="_blank" style="color: inherit; text-decoration: none;">50959684000121</a></div>
+            <div>© 2026. Todos os direitos reservados.</div>
+        </div>
+    </div>
+</footer>
+
+<a href="https://wa.me/5583986850191" class="whatsapp-btn-fixed" target="_blank" rel="noopener noreferrer">
+    <svg viewBox="0 0 32 32">
+        <path d="M16 2a13 13 0 0 0-11.4 19.24l-1.6 5.86 6-1.57A13 13 0 1 0 16 2zm6.75 18.57c-.28.78-1.4 1.42-2 1.48s-1.15.22-3.83-.84a15.23 15.23 0 0 1-5.3-4.63 6.3 6.3 0 0 1-1.3-3.32 3.52 3.52 0 0 1 1.1-2.63l.4-.4a1.08 1.08 0 0 1 .78-.32h.44a.8.8 0 0 1 .6.28l1.3 3.12a.84.84 0 0 1 0 .7l-.54.8c-.14.2-.3.42-.1.74a10.09 10.09 0 0 0 1.93 2.38 8.44 8.44 0 0 0 2.8 1.73c.34.16.54.14.74-.1l.82-1.1c.2-.28.46-.24.72-.14l3.24 1.6a.79.79 0 0 1 .4.72.63.63 0 0 1-.03.53z"/>
+    </svg>
+</a>
+
 <script>
     const API_URL = window.location.hostname.includes('onrender.com')
         ? `${window.location.origin}/todos`
@@ -129,7 +710,6 @@
         window.location.href = 'checkout.html';
     }
 
-    // Limpa fotos antigas do localStorage e carrega o banner público do Cloudinary
     async function aplicarConfiguracoesBannerSalvas() {
         localStorage.removeItem('banner_foto1');
         localStorage.removeItem('banner_foto2');
@@ -168,7 +748,6 @@
         }
     }
 
-    // Salva o banner enviando imagens para o Cloudinary via Spring Boot
     async function salvarConfiguracoesBanner() {
         const titulo = document.getElementById('customTitulo').value.trim();
         const subtitulo = document.getElementById('customSubtitulo').value.trim();
@@ -202,7 +781,6 @@
         }
     }
 
-    // Restaura o banner no backend removendo as fotos
     async function limparBannerConfig() {
         if (!confirm("Deseja remover as imagens do banner e restaurar o padrão cinza?")) return;
 
@@ -382,3 +960,5 @@
     carregarDados();
     aplicarConfiguracoesBannerSalvas();
 </script>
+</body>
+</html>
