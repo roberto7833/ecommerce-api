@@ -28,7 +28,7 @@
 
         .galeria-miniaturas { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; min-height: 105px; }
 
-        /* Container com suporte a botão de apagar */
+        /* Container da miniatura com suporte ao botão de apagar */
         .thumb-container { position: relative; width: 70px; aspect-ratio: 3/4; flex-shrink: 0; }
         .miniatura { width: 100%; height: 100%; object-fit: cover; cursor: pointer; border: 1px solid transparent; background-color: #f4f0ea; }
         .miniatura.active { border-color: #1c1a17; }
@@ -93,7 +93,7 @@
     <div class="col-detalhes">
         <input type="text" id="produtoNome" class="editable-input" readonly>
         <div class="p-sku" id="produtoSku">SKU: --</div>
-        <div class="price-container"><span>R$</span><input type="number" step="0.01" id="produtoPreco" class="p-preco" readonly></div>
+        <div class="price-container"><span>R$</span><input type="text" id="produtoPreco" class="p-preco" readonly></div>
 
         <div class="info-linha">
             <div class="info-item">Categoria: <select id="produtoCategoria" class="editable-field" disabled><option value="NOVA_COLECO">NOVA COLEÇÃO</option><option value="VESTIDOS">VESTIDOS</option><option value="MODA_FEMININA">MODA FEMININA</option><option value="MODA_MASCULINA">MODA MASCULINA</option><option value="ACESSORIOS">ACESSÓRIOS</option></select></div>
@@ -109,7 +109,11 @@
 </main>
 
 <script>
-    const API_URL = 'http://localhost:8080/todos';
+    // URL Dinâmica: Detecta se o site está rodando online no Render ou local
+    const API_URL = window.location.hostname.includes('onrender.com')
+        ? `${window.location.origin}/todos`
+        : 'http://localhost:8080/todos';
+
     const urlParams = new URLSearchParams(window.location.search);
     const produtoId = urlParams.get('id');
     let produtoAtual = null;
@@ -128,7 +132,11 @@
             authBtn.innerText = 'Sair';
             abaSacola.style.display = (role === 'CLIENTE') ? 'block' : 'none';
             if (role === 'VENDEDOR') {
-                btnRemover.style.display = 'block'; btnSacola.style.display = 'none'; btnSalvar.style.display = 'block'; adminFotosBox.style.display = 'block';
+                btnRemover.style.display = 'block';
+                btnSacola.style.display = 'none';
+                btnSalvar.style.display = 'block';
+                adminFotosBox.style.display = 'block';
+
                 document.getElementById('produtoNome').removeAttribute('readonly');
                 document.getElementById('produtoNome').classList.add('active-edit');
                 document.getElementById('produtoPreco').removeAttribute('readonly');
@@ -139,21 +147,33 @@
                 document.getElementById('produtoCategoria').classList.add('active-edit');
                 document.getElementById('produtoTamanho').removeAttribute('disabled');
                 document.getElementById('produtoTamanho').classList.add('active-edit');
+
                 document.querySelectorAll('.btn-delete-photo').forEach(b => b.style.display = 'flex');
                 renderizarCampoCorAdmin();
             } else { configurarModoVisualizacao(); }
-        } else { authBtn.innerText = 'Login'; configurarModoVisualizacao(); abaSacola.style.display = 'none'; btnSacola.setAttribute('onclick', "window.location.href='login.html'"); }
+        } else {
+            authBtn.innerText = 'Login';
+            configurarModoVisualizacao();
+            abaSacola.style.display = 'none';
+            btnSacola.setAttribute('onclick', "window.location.href='login.html'");
+        }
         atualizarContadorSacola();
     }
 
     function configurarModoVisualizacao() {
-        document.getElementById('btnRemover').style.display = 'none'; document.getElementById('btnSalvarAlteracoes').style.display = 'none'; document.getElementById('adminFotosBox').style.display = 'none'; document.getElementById('btnSacola').style.display = 'block';
+        document.getElementById('btnRemover').style.display = 'none';
+        document.getElementById('btnSalvarAlteracoes').style.display = 'none';
+        document.getElementById('adminFotosBox').style.display = 'none';
+        document.getElementById('btnSacola').style.display = 'block';
         document.querySelectorAll('.btn-delete-photo').forEach(b => b.style.display = 'none');
     }
 
     function gerenciarSessao() {
-        if (localStorage.getItem('userRole')) { localStorage.removeItem('userRole'); localStorage.removeItem('userName'); window.location.href = 'index.html'; }
-        else { window.location.href = 'login.html'; }
+        if (localStorage.getItem('userRole')) {
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userName');
+            window.location.href = 'index.html';
+        } else { window.location.href = 'login.html'; }
     }
 
     function obterItensSacola() { return JSON.parse(localStorage.getItem('matuta_cart') || '[]'); }
@@ -164,7 +184,8 @@
         const listaCores = coresString.split(',').map(c => c.trim()).filter(c => c.length > 0);
         let htmlSelect = `Cor Escolhida: <select id="produtoCorSelect" class="select-cor-cliente">`;
         listaCores.forEach(cor => { htmlSelect += `<option value="${cor}">${cor}</option>`; });
-        htmlSelect += `</select>`; container.innerHTML = htmlSelect;
+        htmlSelect += `</select>`;
+        container.innerHTML = htmlSelect;
     }
 
     function renderizarCampoCorAdmin() {
@@ -205,7 +226,7 @@
             delBtn.style.display = (role === 'VENDEDOR') ? 'flex' : 'none';
             delBtn.onclick = (e) => {
                 e.stopPropagation();
-                if(confirm("Remover esta imagem?")) {
+                if(confirm("Remover esta imagem do acervo?")) {
                     listaImagensMantidas = listaImagensMantidas.filter(url => url !== imgUrl);
                     thumbContainer.remove();
                     const restante = document.querySelectorAll('.miniatura');
@@ -245,22 +266,37 @@
             else { renderizarCampoCorAdmin(); }
 
             document.getElementById('btnRemover').onclick = () => deletarRoupa(produtoAtual.id);
-        } catch (erro) { console.error('Erro ao buscar detalhes:', erro); }
+        } catch (erro) { console.error('Erro ao buscar detalhes do produto:', erro); }
     }
 
     async function salvarAlteracoesProduto() {
         const novoNome = document.getElementById('produtoNome').value.trim();
-        const novoPreco = parseFloat(document.getElementById('produtoPreco').value);
+
+        // Trata vírgula informada no preço substituindo por ponto
+        const precoBruto = document.getElementById('produtoPreco').value.replace(',', '.');
+        const novoPreco = parseFloat(precoBruto);
+
         const novaCategoria = document.getElementById('produtoCategoria').value;
         const novoTamanho = document.getElementById('produtoTamanho').value;
         const novaCor = document.getElementById('produtoCor').value.trim();
         const novoEstoque = parseInt(document.getElementById('produtoEstoque').value);
         const novasFotos = document.getElementById('novasFotosInput').files;
 
+        if (!novoNome || isNaN(novoPreco) || novoPreco <= 0 || !novaCor || isNaN(novoEstoque)) {
+            alert('Preencha todos os campos com valores válidos antes de salvar.');
+            return;
+        }
+
         const dadosAtualizados = {
-            nome: novoNome, descricao: produtoAtual.descricao, preco: novoPreco,
-            sku: produtoAtual.sku, qtEstoque: novoEstoque, tamanho: novoTamanho,
-            categoria: novaCategoria, cor: novaCor, imagens: listaImagensMantidas
+            nome: novoNome,
+            descricao: produtoAtual.descricao,
+            preco: novoPreco,
+            sku: produtoAtual.sku,
+            qtEstoque: novoEstoque,
+            tamanho: novoTamanho,
+            categoria: novaCategoria,
+            cor: novaCor,
+            imagens: listaImagensMantidas
         };
 
         const formData = new FormData();
@@ -270,9 +306,19 @@
             formData.append("foto", novasFotos[i]);
         }
 
-        const resposta = await fetch(`${API_URL}/${produtoId}`, { method: 'PUT', body: formData });
-        if (resposta.ok) { alert('Produto e imagens salvos com sucesso!'); window.location.reload(); }
-        else { alert('Erro ao atualizar produto.'); }
+        try {
+            const resposta = await fetch(`${API_URL}/${produtoId}`, { method: 'PUT', body: formData });
+            if (resposta.ok) {
+                alert('Produto e imagens atualizados com sucesso!');
+                window.location.reload();
+            } else {
+                const erroMsg = await resposta.text();
+                alert('Erro ao atualizar produto: ' + erroMsg);
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Erro ao conectar com o servidor.');
+        }
     }
 
     function adicionarAoCarrinho() {
@@ -280,18 +326,30 @@
         let cart = obterItensSacola();
         const corSelecionada = document.getElementById('produtoCorSelect') ? document.getElementById('produtoCorSelect').value : produtoAtual.cor;
         const itemSacola = {
-            id: produtoAtual.id, nome: produtoAtual.nome, preco: produtoAtual.preco,
-            tamanho: document.getElementById('produtoTamanho').value, categoria: produtoAtual.categoria,
-            cor: corSelecionada, foto: listaImagensMantidas[0] || 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?q=80&w=500'
+            id: produtoAtual.id,
+            nome: produtoAtual.nome,
+            preco: produtoAtual.preco,
+            tamanho: document.getElementById('produtoTamanho').value,
+            categoria: produtoAtual.categoria,
+            cor: corSelecionada,
+            foto: listaImagensMantidas[0] || 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?q=80&w=500'
         };
-        cart.push(itemSacola); localStorage.setItem('matuta_cart', JSON.stringify(cart));
-        atualizarContadorSacola(); alert(`${produtoAtual.nome} adicionado!`);
+        cart.push(itemSacola);
+        localStorage.setItem('matuta_cart', JSON.stringify(cart));
+        atualizarContadorSacola();
+        alert(`${produtoAtual.nome} foi adicionado à sacola!`);
     }
 
     async function deletarRoupa(id) {
-        if (!confirm('Excluir peça?')) return;
-        const resposta = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-        if (resposta.ok) { window.location.href = 'index.html'; }
+        if (!confirm('Deseja realmente remover esta peça do acervo?')) return;
+        try {
+            const resposta = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+            if (resposta.ok) { window.location.href = 'index.html'; }
+            else { alert('Erro ao deletar produto.'); }
+        } catch(e) {
+            console.error(e);
+            alert('Erro de conexão ao remover o produto.');
+        }
     }
 
     carregarDetalhesProduto().then(() => checarPermissoes());
