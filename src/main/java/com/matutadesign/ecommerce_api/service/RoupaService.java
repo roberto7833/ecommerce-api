@@ -19,27 +19,31 @@ public class RoupaService {
     @Autowired
     private RoupaRepository roupaRepository;
 
-    private final String DIRETORIO_DESTINO = "C:/Users/rober/IdeaProjects/midias/imagens-boutique/";
+    // Detecta dinamicamente o Sistema Operacional (Windows ou Linux/Render)
+    private String obterDiretorioDestino() {
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("win")) {
+            return "C:/Users/rober/IdeaProjects/midias/imagens-boutique/";
+        } else {
+            return "/tmp/imagens-boutique/";
+        }
+    }
 
-    // 1. LISTAR TODAS AS PEÇAS
     @Transactional(readOnly = true)
     public List<Roupa> listarTodas() {
         return roupaRepository.findAll();
     }
 
-    // 2. BUSCAR PEÇA POR ID
     @Transactional(readOnly = true)
     public Roupa buscarPorId(Long id) {
         return roupaRepository.findById(id).orElse(null);
     }
 
-    // 3. VERIFICAR SE SKU JÁ EXISTE
     @Transactional(readOnly = true)
     public boolean existeSku(String sku) {
         return roupaRepository.existsBySku(sku);
     }
 
-    // 4. SALVAR NOVA PEÇA COM MÚLTIPLAS FOTOS
     @Transactional
     public Roupa salvar(RoupaRequestDto roupaDTO, List<MultipartFile> fotos) {
         Roupa roupa = new Roupa();
@@ -54,14 +58,13 @@ public class RoupaService {
 
         List<String> urlsFotos = processarImagensLocais(fotos);
         if (urlsFotos.isEmpty()) {
-            urlsFotos.add("/midias/padrao.jpg");
+            urlsFotos.add("https://images.unsplash.com/photo-1434389677669-e08b4cac3105?q=80&w=500");
         }
         roupa.setImagens(urlsFotos);
 
         return roupaRepository.save(roupa);
     }
 
-    // 5. ATUALIZAR INFORMAÇÕES E SUBSTITUIR POR NOVAS FOTOS (Se enviadas)
     @Transactional
     public Roupa atualizar(Long id, RoupaRequestDto roupaDTO, List<MultipartFile> fotos) {
         Roupa roupaExistente = roupaRepository.findById(id)
@@ -75,45 +78,39 @@ public class RoupaService {
         roupaExistente.setCategoria(roupaDTO.categoria());
         roupaExistente.setCor(roupaDTO.cor());
 
-        // 1. Recupera as fotos que o front-end pediu para MANTER
         List<String> imagensFinais = new ArrayList<>();
         if (roupaDTO.imagens() != null && !roupaDTO.imagens().isEmpty()) {
             imagensFinais.addAll(roupaDTO.imagens());
         } else {
-            // Caso o DTO venha nulo por falha de mapeamento, preserva o que já estava no banco
             imagensFinais.addAll(roupaExistente.getImagens());
         }
 
-        // 2. Processa as NOVAS fotos e ACRÉSCETA na lista existente
         if (fotos != null && !fotos.isEmpty() && !fotos.get(0).isEmpty()) {
             List<String> novasUrls = processarImagensLocais(fotos);
             imagensFinais.addAll(novasUrls);
         }
 
-        // 3. Garante que nunca fique vazio
         if (imagensFinais.isEmpty()) {
-            imagensFinais.add("/midias/padrao.jpg");
+            imagensFinais.add("https://images.unsplash.com/photo-1434389677669-e08b4cac3105?q=80&w=500");
         }
 
-        // 4. Limpa e redefine o estado da coleção para evitar problemas de persistência do JPA
         roupaExistente.getImagens().clear();
         roupaExistente.getImagens().addAll(imagensFinais);
 
         return roupaRepository.save(roupaExistente);
     }
 
-    // 6. DELETAR PEÇA
     @Transactional
     public void deletar(Long id) {
         roupaRepository.deleteById(id);
     }
 
-    // MÉTODO AUXILIAR PRIVADO PARA PROCESSAR MÚLTIPLOS ARQUIVOS
     private List<String> processarImagensLocais(List<MultipartFile> fotos) {
         List<String> urlsFinais = new ArrayList<>();
+        String pastaDestino = obterDiretorioDestino();
 
         if (fotos != null && !fotos.isEmpty()) {
-            File pasta = new File(DIRETORIO_DESTINO);
+            File pasta = new File(pastaDestino);
             if (!pasta.exists()) {
                 pasta.mkdirs();
             }
@@ -122,12 +119,12 @@ public class RoupaService {
                 if (foto != null && !foto.isEmpty()) {
                     try {
                         String nomeArquivo = System.currentTimeMillis() + "_" + foto.getOriginalFilename();
-                        File arquivoDestino = new File(DIRETORIO_DESTINO + nomeArquivo);
+                        File arquivoDestino = new File(pasta, nomeArquivo);
                         foto.transferTo(arquivoDestino);
 
                         urlsFinais.add("/midias/" + nomeArquivo);
                     } catch (IOException e) {
-                        throw new RuntimeException("Erro ao salvar um dos arquivos no servidor local: " + e.getMessage());
+                        throw new RuntimeException("Erro ao salvar um dos arquivos no servidor: " + e.getMessage());
                     }
                 }
             }
