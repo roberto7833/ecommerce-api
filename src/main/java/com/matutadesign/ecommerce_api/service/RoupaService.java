@@ -1,5 +1,7 @@
 package com.matutadesign.ecommerce_api.service;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.matutadesign.ecommerce_api.dto.RoupaRequestDto;
 import com.matutadesign.ecommerce_api.entity.Roupa;
 import com.matutadesign.ecommerce_api.repository.RoupaRepository;
@@ -8,10 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RoupaService {
@@ -19,15 +21,8 @@ public class RoupaService {
     @Autowired
     private RoupaRepository roupaRepository;
 
-    // Detecta dinamicamente o Sistema Operacional (Windows ou Linux/Render)
-    private String obterDiretorioDestino() {
-        String os = System.getProperty("os.name").toLowerCase();
-        if (os.contains("win")) {
-            return "C:/Users/rober/IdeaProjects/midias/imagens-boutique/";
-        } else {
-            return "/tmp/imagens-boutique/";
-        }
-    }
+    @Autowired
+    private Cloudinary cloudinary;
 
     @Transactional(readOnly = true)
     public List<Roupa> listarTodas() {
@@ -56,7 +51,7 @@ public class RoupaService {
         roupa.setCategoria(roupaDTO.categoria());
         roupa.setCor(roupaDTO.cor());
 
-        List<String> urlsFotos = processarImagensLocais(fotos);
+        List<String> urlsFotos = enviarFotosParaCloudinary(fotos);
         if (urlsFotos.isEmpty()) {
             urlsFotos.add("https://images.unsplash.com/photo-1434389677669-e08b4cac3105?q=80&w=500");
         }
@@ -86,7 +81,7 @@ public class RoupaService {
         }
 
         if (fotos != null && !fotos.isEmpty() && !fotos.get(0).isEmpty()) {
-            List<String> novasUrls = processarImagensLocais(fotos);
+            List<String> novasUrls = enviarFotosParaCloudinary(fotos);
             imagensFinais.addAll(novasUrls);
         }
 
@@ -105,30 +100,25 @@ public class RoupaService {
         roupaRepository.deleteById(id);
     }
 
-    private List<String> processarImagensLocais(List<MultipartFile> fotos) {
-        List<String> urlsFinais = new ArrayList<>();
-        String pastaDestino = obterDiretorioDestino();
+    // Faz o upload direto para o Cloudinary e gera URLs públicas permanentes
+    private List<String> enviarFotosParaCloudinary(List<MultipartFile> fotos) {
+        List<String> urlsPublicas = new ArrayList<>();
 
         if (fotos != null && !fotos.isEmpty()) {
-            File pasta = new File(pastaDestino);
-            if (!pasta.exists()) {
-                pasta.mkdirs();
-            }
-
             for (MultipartFile foto : fotos) {
                 if (foto != null && !foto.isEmpty()) {
                     try {
-                        String nomeArquivo = System.currentTimeMillis() + "_" + foto.getOriginalFilename();
-                        File arquivoDestino = new File(pasta, nomeArquivo);
-                        foto.transferTo(arquivoDestino);
+                        Map uploadResult = cloudinary.uploader().upload(foto.getBytes(),
+                                ObjectUtils.asMap("folder", "matuta-boutique"));
 
-                        urlsFinais.add("/midias/" + nomeArquivo);
+                        String urlSegura = (String) uploadResult.get("secure_url");
+                        urlsPublicas.add(urlSegura);
                     } catch (IOException e) {
-                        throw new RuntimeException("Erro ao salvar um dos arquivos no servidor: " + e.getMessage());
+                        throw new RuntimeException("Erro ao enviar foto para o Cloudinary: " + e.getMessage());
                     }
                 }
             }
         }
-        return urlsFinais;
+        return urlsPublicas;
     }
 }
