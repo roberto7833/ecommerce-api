@@ -28,42 +28,57 @@ public class BannerController {
     public ResponseEntity<Banner> obterBanner() {
         List<Banner> banners = bannerRepository.findAll();
         if (banners.isEmpty()) {
-            Banner padrao = new Banner(
-                    "MATUTA",
-                    "PEÇAS EXCLUSIVAS",
-                    "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=800",
-                    "https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=800"
-            );
+            Banner padrao = new Banner("MATUTA", "PEÇAS EXCLUSIVAS", null, null);
             return ResponseEntity.ok(padrao);
         }
         return ResponseEntity.ok(banners.get(0));
     }
 
     @PostMapping
-    public ResponseEntity<Banner> atualizarBanner(
+    public ResponseEntity<?> atualizarBanner(
             @RequestParam(value = "titulo", required = false) String titulo,
             @RequestParam(value = "subtitulo", required = false) String subtitulo,
             @RequestParam(value = "fotoEsquerda", required = false) MultipartFile fotoEsquerda,
             @RequestParam(value = "fotoDireita", required = false) MultipartFile fotoDireita
     ) {
-        List<Banner> banners = bannerRepository.findAll();
-        Banner banner = banners.isEmpty() ? new Banner() : banners.get(0);
-
-        if (titulo != null && !titulo.isBlank()) banner.setTitulo(titulo);
-        if (subtitulo != null && !subtitulo.isBlank()) banner.setSubtitulo(subtitulo);
-
         try {
+            List<Banner> banners = bannerRepository.findAll();
+            Banner banner = banners.isEmpty() ? new Banner() : banners.get(0);
+
+            if (titulo != null && !titulo.trim().isEmpty()) {
+                banner.setTitulo(titulo.trim());
+            }
+            if (subtitulo != null && !subtitulo.trim().isEmpty()) {
+                banner.setSubtitulo(subtitulo.trim());
+            }
+
             if (fotoEsquerda != null && !fotoEsquerda.isEmpty()) {
                 Map res = cloudinary.uploader().upload(fotoEsquerda.getBytes(), ObjectUtils.asMap("folder", "matuta-banner"));
                 banner.setFotoEsquerdaUrl((String) res.get("secure_url"));
             }
+
             if (fotoDireita != null && !fotoDireita.isEmpty()) {
                 Map res = cloudinary.uploader().upload(fotoDireita.getBytes(), ObjectUtils.asMap("folder", "matuta-banner"));
                 banner.setFotoDireitaUrl((String) res.get("secure_url"));
             }
-        } catch (IOException e) {
-            return ResponseEntity.internalServerError().build();
+
+            Banner salvo = bannerRepository.save(banner);
+            return ResponseEntity.ok(salvo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Erro ao processar banner: " + e.getMessage());
         }
+    }
+
+    @PostMapping("/reset")
+    public ResponseEntity<Banner> resetarBanner() {
+        List<Banner> banners = bannerRepository.findAll();
+        Banner banner = banners.isEmpty() ? new Banner() : banners.get(0);
+
+        banner.setTitulo("MATUTA");
+        banner.setSubtitulo("PEÇAS EXCLUSIVAS");
+        banner.setFotoEsquerdaUrl(null);
+        banner.setFotoDireitaUrl(null);
 
         Banner salvo = bannerRepository.save(banner);
         return ResponseEntity.ok(salvo);
