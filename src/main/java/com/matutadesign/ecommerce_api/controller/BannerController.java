@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -45,10 +44,10 @@ public class BannerController {
             List<Banner> banners = bannerRepository.findAll();
             Banner banner = banners.isEmpty() ? new Banner() : banners.get(0);
 
-            if (titulo != null && !titulo.trim().isEmpty()) {
+            if (titulo != null && !titulo.isBlank()) {
                 banner.setTitulo(titulo.trim());
             }
-            if (subtitulo != null && !subtitulo.trim().isEmpty()) {
+            if (subtitulo != null && !subtitulo.isBlank()) {
                 banner.setSubtitulo(subtitulo.trim());
             }
 
@@ -66,7 +65,7 @@ public class BannerController {
             return ResponseEntity.ok(salvo);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().body("Erro ao processar banner: " + e.getMessage());
+            return ResponseEntity.badRequest().body("Erro no banco ou no upload: " + e.getMessage());
         }
     }
 

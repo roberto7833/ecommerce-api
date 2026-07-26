@@ -12,7 +12,11 @@ public class Banner {
 
     private String titulo;
     private String subtitulo;
+
+    @Column(columnDefinition = "TEXT")
     private String fotoEsquerdaUrl;
+
+    @Column(columnDefinition = "TEXT")
     private String fotoDireitaUrl;
 
     public Banner() {}
@@ -24,7 +28,6 @@ public class Banner {
         this.fotoDireitaUrl = fotoDireitaUrl;
     }
 
-    // Getters e Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
