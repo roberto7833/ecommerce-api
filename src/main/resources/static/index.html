@@ -772,12 +772,16 @@
                 document.getElementById('bannerForm').reset();
                 aplicarConfiguracoesBannerSalvas();
             } else {
-                const erroTexto = await res.text();
-                alert('Erro ao atualizar o banner: ' + erroTexto);
+                let mensagemErro = await res.text();
+                try {
+                    const jsonErro = JSON.parse(mensagemErro);
+                    mensagemErro = jsonErro.message || jsonErro.error || mensagemErro;
+                } catch(e) {}
+                alert('Erro do servidor: ' + (mensagemErro || res.statusText));
             }
         } catch (err) {
-            console.error(err);
-            alert('Erro de conexão ao salvar o banner.');
+            console.error("Erro na requisição:", err);
+            alert('Erro de conexão ao salvar o banner: ' + err.message);
         }
     }
 
