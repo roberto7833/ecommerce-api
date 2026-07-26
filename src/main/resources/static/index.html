@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matuta | Alta Costura & Minimalismo</title>
+    <title>Matuta </title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Didot", "Playfair Display", Arial, sans-serif; }
-        body { background-color: #fcfbfa; color: #1c1a17; padding-bottom: 0; }
+        body { background-color: #fcfbfa; color: #1c1a17; padding-bottom: 0; overflow-x: hidden; }
 
         header {
             background-color: #ffffff;
@@ -34,10 +34,11 @@
 
         .nav-links {
             display: flex;
-            gap: 30px;
+            gap: 20px;
             list-style: none;
             align-items: center;
             margin-left: auto;
+            flex-wrap: wrap;
         }
         .nav-links li {
             font-size: 12px;
@@ -56,8 +57,8 @@
         }
 
         .search-container {
-            width: 200px;
-            margin-right: 10px;
+            width: 180px;
+            margin-right: 5px;
         }
         .search-container input {
             width: 100%;
@@ -258,7 +259,7 @@
             display: none;
         }
 
-        .hero-content { position: relative; z-index: 2; text-align: center; color: #ffffff; background: rgba(28, 26, 23, 0.3); padding: 40px; backdrop-filter: blur(4px); }
+        .hero-content { position: relative; z-index: 2; text-align: center; color: #ffffff; background: rgba(28, 26, 23, 0.3); padding: 40px; backdrop-filter: blur(4px); width: 90%; max-width: 600px; }
         .hero-content h1 { font-size: 55px; font-weight: 300; letter-spacing: 8px; margin-bottom: 15px; text-transform: uppercase; }
         .hero-content p { font-size: 14px; letter-spacing: 3px; margin-bottom: 30px; text-transform: uppercase; font-weight: 300; }
         .hero-banner .hero-btn { background-color: #ffffff; color: #1c1a17; border: none; padding: 14px 45px; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: background 0.2s; }
@@ -267,8 +268,8 @@
         .banner-trigger {
             display: none;
             position: absolute;
-            top: 30px;
-            right: 50px;
+            top: 20px;
+            right: 20px;
             background: #1c1a17;
             color: white;
             border: none;
@@ -304,7 +305,7 @@
 
         .admin-trigger { display: none; position: fixed; bottom: 30px; right: 30px; background: #1c1a17; color: white; border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 24px; cursor: pointer; z-index: 10; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
 
-        .admin-modal, .banner-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); z-index: 101; width: 450px; border: 1px solid #eae5df; max-height: 90vh; overflow-y: auto; }
+        .admin-modal, .banner-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); z-index: 101; width: 90%; max-width: 450px; border: 1px solid #eae5df; max-height: 90vh; overflow-y: auto; }
         .admin-modal input, .admin-modal select, .banner-modal input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #eae5df; background: #fcfbfa; font-size: 13px; outline: none; }
         .admin-modal button, .banner-modal button { width: 100%; padding: 14px; background: #1c1a17; color: white; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; }
 
@@ -338,7 +339,7 @@
         .main-footer {
             background-color: #f7f3ee;
             border-top: 1px solid #eae5df;
-            padding: 60px 50px 30px 50px;
+            padding: 60px 20px 30px 20px;
             width: 100%;
             margin-top: 100px;
         }
@@ -420,6 +421,70 @@
             font-weight: bold;
             letter-spacing: 1px;
         }
+
+        /* ===================================================================
+           REGRAS RESPONSIVAS PARA CELULARES E TABLETS (MAX-WIDTH 768PX)
+           =================================================================== */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .nav-links {
+                margin-left: 0;
+                justify-content: center;
+                gap: 12px;
+                width: 100%;
+            }
+            .search-container {
+                width: 100%;
+                margin-right: 0;
+            }
+
+            .hero-banner {
+                height: 300px;
+            }
+            .hero-content {
+                padding: 20px;
+            }
+            .hero-content h1 {
+                font-size: 32px;
+                letter-spacing: 4px;
+            }
+            .hero-content p {
+                font-size: 11px;
+                margin-bottom: 15px;
+            }
+            .hero-banner .hero-btn {
+                padding: 10px 25px;
+                font-size: 10px;
+            }
+
+            .vitrine-section {
+                padding: 0 15px;
+                margin: 30px auto;
+            }
+            .vitrine-title {
+                font-size: 18px;
+                margin-bottom: 25px;
+            }
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .sacola-drawer {
+                width: 100%;
+                right: -100%;
+            }
+
+            .card-arrow {
+                opacity: 0.8;
+            }
+        }
     </style>
 </head>
 <body>
@@ -435,8 +500,8 @@
             </li>
             <li class="uppercase" onclick="filtrarCategoria('NOVA_COLECO')">NOVA COLEÇÃO</li>
             <li class="uppercase" onclick="filtrarCategoria('VESTIDOS')">VESTIDOS</li>
-            <li class="uppercase" onclick="filtrarCategoria('MODA_FEMININA')">moda feminina</li>
-            <li class="uppercase" onclick="filtrarCategoria('MODA_MASCULINA')">moda masculina</li>
+            <li class="uppercase" onclick="filtrarCategoria('MODA_FEMININA')">MODA FEMININA</li>
+            <li class="uppercase" onclick="filtrarCategoria('MODA_MASCULINA')">MODA MASCULINA</li>
             <li class="uppercase" onclick="filtrarCategoria('ACESSORIOS')">ACESSÓRIOS</li>
 
             <li id="abaSacola" style="display: none;">
@@ -837,7 +902,7 @@
         const produtos = listaParaExibir ? listaParaExibir : produtosLocais;
 
         if (!produtos || produtos.length === 0) {
-            grid.innerHTML = '<p style="grid-column: span 4; text-align: center; color: #7a7265; padding: 40px 0;">Nenhuma peça encontrada.</p>';
+            grid.innerHTML = '<p style="grid-column: span 2; text-align: center; color: #7a7265; padding: 40px 0;">Nenhuma peça encontrada.</p>';
             return;
         }
 
