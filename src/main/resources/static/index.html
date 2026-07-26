@@ -751,14 +751,19 @@
     async function salvarConfiguracoesBanner() {
         const titulo = document.getElementById('customTitulo').value.trim();
         const subtitulo = document.getElementById('customSubtitulo').value.trim();
-        const file1 = document.getElementById('customFile1').files[0];
-        const file2 = document.getElementById('customFile2').files[0];
+        const file1Input = document.getElementById('customFile1');
+        const file2Input = document.getElementById('customFile2');
 
         const formData = new FormData();
         if (titulo) formData.append('titulo', titulo);
         if (subtitulo) formData.append('subtitulo', subtitulo);
-        if (file1) formData.append('fotoEsquerda', file1);
-        if (file2) formData.append('fotoDireita', file2);
+
+        if (file1Input.files && file1Input.files.length > 0) {
+            formData.append('fotoEsquerda', file1Input.files[0]);
+        }
+        if (file2Input.files && file2Input.files.length > 0) {
+            formData.append('fotoDireita', file2Input.files[0]);
+        }
 
         try {
             const res = await fetch(BANNER_API, {
@@ -772,12 +777,8 @@
                 document.getElementById('bannerForm').reset();
                 aplicarConfiguracoesBannerSalvas();
             } else {
-                let mensagemErro = await res.text();
-                try {
-                    const jsonErro = JSON.parse(mensagemErro);
-                    mensagemErro = jsonErro.message || jsonErro.error || mensagemErro;
-                } catch(e) {}
-                alert('Erro do servidor: ' + (mensagemErro || res.statusText));
+                const erroTexto = await res.text();
+                alert('Erro do servidor (' + res.status + '): ' + (erroTexto || 'Falha ao salvar dados.'));
             }
         } catch (err) {
             console.error("Erro na requisição:", err);

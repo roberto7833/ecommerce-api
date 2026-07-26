@@ -5,6 +5,7 @@ import com.cloudinary.utils.ObjectUtils;
 import com.matutadesign.ecommerce_api.entity.Banner;
 import com.matutadesign.ecommerce_api.repository.BannerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,12 +26,17 @@ public class BannerController {
 
     @GetMapping
     public ResponseEntity<Banner> obterBanner() {
-        List<Banner> banners = bannerRepository.findAll();
-        if (banners.isEmpty()) {
+        try {
+            List<Banner> banners = bannerRepository.findAll();
+            if (banners.isEmpty()) {
+                Banner padrao = new Banner("MATUTA", "PEÇAS EXCLUSIVAS", null, null);
+                return ResponseEntity.ok(padrao);
+            }
+            return ResponseEntity.ok(banners.get(0));
+        } catch (Exception e) {
             Banner padrao = new Banner("MATUTA", "PEÇAS EXCLUSIVAS", null, null);
             return ResponseEntity.ok(padrao);
         }
-        return ResponseEntity.ok(banners.get(0));
     }
 
     @PostMapping
@@ -44,29 +50,28 @@ public class BannerController {
             List<Banner> banners = bannerRepository.findAll();
             Banner banner = banners.isEmpty() ? new Banner() : banners.get(0);
 
-            // Mantém os títulos padrão caso estejam vazios ou nulos
-            if (titulo != null && !titulo.trim().isEmpty()) {
+            if (titulo != null && !titulo.isBlank()) {
                 banner.setTitulo(titulo.trim());
             } else if (banner.getTitulo() == null) {
                 banner.setTitulo("MATUTA");
             }
 
-            if (subtitulo != null && !subtitulo.trim().isEmpty()) {
+            if (subtitulo != null && !subtitulo.isBlank()) {
                 banner.setSubtitulo(subtitulo.trim());
             } else if (banner.getSubtitulo() == null) {
                 banner.setSubtitulo("PEÇAS EXCLUSIVAS");
             }
 
-            // Upload Foto Esquerda para o Cloudinary
-            if (fotoEsquerda != null && !fotoEsquerda.isEmpty()) {
+            // Upload Foto Esquerda (Cloudinary)
+            if (fotoEsquerda != null && !fotoEsquerda.isEmpty() && fotoEsquerda.getSize() > 0) {
                 Map res = cloudinary.uploader().upload(fotoEsquerda.getBytes(), ObjectUtils.asMap("folder", "matuta-banner"));
                 if (res != null && res.containsKey("secure_url")) {
                     banner.setFotoEsquerdaUrl((String) res.get("secure_url"));
                 }
             }
 
-            // Upload Foto Direita para o Cloudinary
-            if (fotoDireita != null && !fotoDireita.isEmpty()) {
+            // Upload Foto Direita (Cloudinary)
+            if (fotoDireita != null && !fotoDireita.isEmpty() && fotoDireita.getSize() > 0) {
                 Map res = cloudinary.uploader().upload(fotoDireita.getBytes(), ObjectUtils.asMap("folder", "matuta-banner"));
                 if (res != null && res.containsKey("secure_url")) {
                     banner.setFotoDireitaUrl((String) res.get("secure_url"));
@@ -77,21 +82,27 @@ public class BannerController {
             return ResponseEntity.ok(salvo);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(500).body("Erro interno ao processar o banner: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro detalhado: " + e.getMessage());
         }
     }
 
     @PostMapping("/reset")
-    public ResponseEntity<Banner> resetarBanner() {
-        List<Banner> banners = bannerRepository.findAll();
-        Banner banner = banners.isEmpty() ? new Banner() : banners.get(0);
+    public ResponseEntity<?> resetarBanner() {
+        try {
+            List<Banner> banners = bannerRepository.findAll();
+            Banner banner = banners.isEmpty() ? new Banner() : banners.get(0);
 
-        banner.setTitulo("MATUTA");
-        banner.setSubtitulo("PEÇAS EXCLUSIVAS");
-        banner.setFotoEsquerdaUrl(null);
-        banner.setFotoDireitaUrl(null);
+            banner.setTitulo("MATUTA");
+            banner.setSubtitulo("PEÇAS EXCLUSIVAS");
+            banner.setFotoEsquerdaUrl(null);
+            banner.setFotoDireitaUrl(null);
 
-        Banner salvo = bannerRepository.save(banner);
-        return ResponseEntity.ok(salvo);
+            Banner salvo = bannerRepository.save(banner);
+            return ResponseEntity.ok(salvo);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao resetar: " + e.getMessage());
+        }
     }
 }
