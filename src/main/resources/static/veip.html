@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matuta Boutique | Consultor VEIP (SAD)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Didot", "Playfair Display", Arial, sans-serif; }
+        body { background-color: #fcfbfa; color: #1c1a17; display: flex; flex-direction: column; min-height: 100vh; }
+
+        header { background-color: #ffffff; padding: 20px 50px; border-bottom: 1px solid #eae5df; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 22px; letter-spacing: 4px; font-family: "Playfair Display", serif; text-transform: uppercase; }
+        .btn-voltar { background: transparent; border: 1px solid #1c1a17; padding: 8px 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; cursor: pointer; text-decoration: none; color: #1c1a17; }
+        .btn-voltar:hover { background: #1c1a17; color: white; }
+
+        main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 30px 15px; }
+
+        .chat-card { width: 100%; max-width: 550px; height: 600px; background: #ffffff; border: 1px solid #eae5df; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; flex-direction: column; border-radius: 8px; overflow: hidden; }
+        .chat-card-header { background: #1c1a17; color: #ffffff; padding: 20px; text-align: center; }
+        .chat-card-header h2 { font-size: 16px; font-weight: 300; letter-spacing: 3px; text-transform: uppercase; }
+        .chat-card-header p { font-size: 11px; color: #a39e93; letter-spacing: 1px; margin-top: 5px; }
+
+        .chat-body { flex: 1; padding: 20px; overflow-y: auto; background: #fcfbfa; display: flex; flex-direction: column; gap: 12px; }
+        .msg { max-width: 85%; padding: 12px 16px; border-radius: 8px; font-size: 13px; line-height: 1.5; font-family: sans-serif; }
+        .msg.bot { background-color: #f0ece6; color: #1c1a17; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .msg.user { background-color: #1c1a17; color: #ffffff; align-self: flex-end; border-bottom-right-radius: 2px; }
+
+        .chat-footer { padding: 15px; border-top: 1px solid #eae5df; background: #ffffff; display: flex; gap: 10px; }
+        .chat-footer input { flex: 1; padding: 12px; border: 1px solid #eae5df; font-size: 13px; outline: none; border-radius: 4px; }
+        .chat-footer button { background: #1c1a17; color: white; border: none; padding: 12px 20px; cursor: pointer; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; border-radius: 4px; }
+
+        @media (max-width: 768px) {
+            header { padding: 15px 20px; }
+            .chat-card { height: 80vh; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">Matuta Chat</div>
+    <a href="index.html" class="btn-voltar">← Voltar ao Site</a>
+</header>
+
+<main>
+    <div class="chat-card">
+        <div class="chat-card-header">
+            <h2>Consultor VEIP</h2>
+            <p>Sistema de Apoio à Decisão (Uso Exclusivo do Gestor)</p>
+        </div>
+        <div id="chatBody" class="chat-body">
+            <div class="msg bot">
+                Olá, Matuta! Sou o assistente virtual do <b>Valor Esperado da Informação Perfeita</b>.<br><br>Vou te ajudar a calcular o valor máximo que a <b>Matuta Boutique</b> deve investir em pesquisas ou dados antes de tomar uma decisão.
+            </div>
+            <div class="msg bot">
+                Para começar, informe: <b>Qual o LUCRO estimado no cenário de SUCESSO (em R$)?</b>
+            </div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="chatInput" placeholder="Ex: 100000" onkeypress="if(event.key==='Enter') enviarMsg()">
+            <button onclick="enviarMsg()">Enviar</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    // Proteção de Acesso: Apenas VENDEDOR (Gestor) pode acessar
+    const role = localStorage.getItem('userRole');
+    if (role !== 'VENDEDOR') {
+        alert('Acesso negado! Esta ferramenta é exclusiva para o perfil VENDEDOR/GESTOR.');
+        window.location.href = 'index.html';
+    }
+
+    let veipStep = 1;
+    let veipDados = { lucroSucesso: 0, probSucesso: 0, prejuizoFracasso: 0 };
+
+    function enviarMsg() {
+        const input = document.getElementById('chatInput');
+        const val = input.value.trim();
+        if (!val) return;
+
+        addMsg(val, 'user');
+        input.value = '';
+
+        setTimeout(() => processarPasso(val), 300);
+    }
+
+    function addMsg(texto, tipo) {
+        const body = document.getElementById('chatBody');
+        body.innerHTML += `<div class="msg ${tipo}">${texto}</div>`;
+        body.scrollTop = body.scrollHeight;
+    }
+
+    function processarPasso(val) {
+        const num = parseFloat(val.replace(',', '.'));
+        if (isNaN(num)) {
+            addMsg("Por favor, digite apenas números válidos.", 'bot');
+            return;
+        }
+
+        if (veipStep === 1) {
+            veipDados.lucroSucesso = num;
+            veipStep = 2;
+            addMsg("Qual a <b>PROBABILIDADE DE SUCESSO (%)</b>? (Ex: 60 para 60%)", 'bot');
+        } else if (veipStep === 2) {
+            if (num <= 0 || num >= 100) {
+                addMsg("Informe uma porcentagem válida entre 1 e 99.", 'bot');
+                return;
+            }
+            veipDados.probSucesso = num / 100;
+            veipStep = 3;
+            addMsg("Em caso de <b>FRACASSO</b>, qual é o valor do PREJUÍZO (em R$)? (Ex: 40000)", 'bot');
+        } else if (veipStep === 3) {
+            veipDados.prejuizoFracasso = num;
+            calcularResultado();
+        }
+    }
+
+    function calcularResultado() {
+        const pSuc = veipDados.probSucesso;
+        const pFra = 1 - pSuc;
+        const lucro = veipDados.lucroSucesso;
+        const prej = -Math.abs(veipDados.prejuizoFracasso);
+
+        // Retorno Esperado se Decidir Lançar
+        const veLancar = (pSuc * lucro) + (pFra * prej);
+
+        // O VE do gestor é a MELHOR decisão (Lançar vs Não Lançar que dá 0)
+        const ve = Math.max(veLancar, 0);
+
+        // VECIP: Com informação perfeita (Lança no Sucesso, Abandona no Fracasso)
+        const vecip = (pSuc * lucro) + (pFra * 0);
+
+        // VEIP
+        const veip = vecip - ve;
+
+        let res = `<b>📊 ANÁLISE DE DECISÃO FINALIZADA:</b><br><br>`;
+        res += `• <b>VE (Decisão Racional na Incerteza):</b> R$ ${ve.toFixed(2)}<br>`;
+        res += `• <b>VECIP (Com Informação Perfeita):</b> R$ ${vecip.toFixed(2)}<br>`;
+        res += `• <b style="color:#28a745; font-size:15px;">VEIP: R$ ${veip.toFixed(2)}</b><br><br>`;
+        res += `💡 <b>Recomendação do SAD:</b><br>`;
+        res += `A diretoria da Matuta Boutique deve pagar no máximo <b>R$ ${veip.toFixed(2)}</b> por qualquer relatório, algoritmo de IA ou pesquisa de mercado.`;
+
+        addMsg(res, 'bot');
+        veipStep = 1;
+
+        setTimeout(() => {
+            addMsg("<br>Deseja simular outro cenário? Digite novamente o <b>LUCRO em SUCESSO (R$)</b>.", 'bot');
+        }, 1200);
+    }
+</script>
+</body>
+</html>
