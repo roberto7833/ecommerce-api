@@ -8,7 +8,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Didot", "Playfair Display", Arial, sans-serif; }
         body { background-color: #fcfbfa; color: #1c1a17; padding-bottom: 80px; }
 
-        header { background-color: #ffffff; padding: 20px 50px; border-bottom: 1px solid #eae5df; }
+        header { background-color: #ffffff; padding: 25px 50px; border-bottom: 1px solid #eae5df; }
         .header-container { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: auto; }
         .logo { font-size: 28px; letter-spacing: 5px; color: #1c1a17; text-decoration: none; font-family: "Playfair Display", serif; }
         .btn-voltar { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; border: 1px solid #1c1a17; padding: 8px 18px; text-decoration: none; color: #1c1a17; transition: all 0.2s; }
@@ -29,18 +29,23 @@
 
         .product-details { display: flex; flex-direction: column; gap: 20px; }
         .product-title { font-size: 32px; font-weight: 300; letter-spacing: 3px; font-family: "Playfair Display", serif; }
-        .product-price { font-size: 22px; color: #1c1a17; }
+        .product-price { font-size: 22px; color: #1c1a17; margin-bottom: 10px; }
 
-        .form-group { display: flex; flex-direction: column; gap: 6px; }
-        .form-group label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #7a7265; font-weight: bold; }
-        .form-group input, .form-group select { padding: 12px; border: 1px solid #eae5df; background: #ffffff; font-size: 14px; outline: none; }
+        /* DESIGN MINIMALISTA ORIGINAL DOS CAMPOS */
+        .spec-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dotted #eae5df; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; }
+        .spec-label { color: #7a7265; font-weight: bold; }
+        .spec-value { color: #1c1a17; font-weight: normal; }
 
-        .btn-action { width: 100%; padding: 16px; background: #1c1a17; color: white; border: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; font-weight: bold; transition: opacity 0.2s; }
+        .form-group-clean { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dotted #eae5df; }
+        .form-group-clean label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #7a7265; font-weight: bold; }
+        .form-group-clean input, .form-group-clean select { border: none; background: transparent; font-size: 12px; outline: none; text-align: right; letter-spacing: 1px; color: #1c1a17; text-transform: uppercase; }
+
+        .btn-action { width: 100%; padding: 16px; background: #1c1a17; color: white; border: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; font-weight: bold; transition: opacity 0.2s; margin-top: 15px; }
         .btn-action:hover { opacity: 0.9; }
         .btn-danger { background: transparent; border: 1px solid #dc3545; color: #dc3545; margin-top: 10px; }
         .btn-danger:hover { background: #dc3545; color: white; }
 
-        .upload-section { margin-top: 20px; padding: 20px; border: 1px dashed #eae5df; background: #ffffff; }
+        .upload-section { margin-top: 25px; padding: 20px; border: 1px dashed #eae5df; background: #ffffff; }
 
         @media (max-width: 768px) {
             .container { grid-template-columns: 1fr; gap: 30px; }
@@ -64,9 +69,9 @@
         <div id="thumbnailsContainer" class="thumbnails"></div>
 
         <div id="uploadBox" class="upload-section" style="display: none;">
-            <div class="form-group">
-                <label>Adicionar mais fotos a este produto:</label>
-                <input type="file" id="novasFotos" accept="image/*" multiple>
+            <div class="form-group-clean" style="border:none;">
+                <label style="font-size: 10px;">Adicionar mais fotos a este produto:</label>
+                <input type="file" id="novasFotos" accept="image/*" multiple style="font-size: 11px;">
             </div>
         </div>
     </div>
@@ -75,18 +80,40 @@
         <h1 id="exibicaoNome" class="product-title">Carregando...</h1>
         <div id="exibicaoPreco" class="product-price">R$ 0,00</div>
 
-        <form id="detalhesForm">
-            <div class="form-group">
+        <!-- MODO CLIENTE / VISUALIZAÇÃO MINIMALISTA ORIGINAL -->
+        <div id="clienteView" style="display: none;">
+            <div class="spec-row">
+                <span class="spec-label">Categoria:</span>
+                <span id="txtCategoria" class="spec-value">-</span>
+            </div>
+            <div class="spec-row">
+                <span class="spec-label">Tamanho:</span>
+                <span id="txtTamanho" class="spec-value">-</span>
+            </div>
+            <div class="spec-row">
+                <span class="spec-label">Cor Disponível:</span>
+                <span id="txtCor" class="spec-value">-</span>
+            </div>
+            <div class="spec-row">
+                <span class="spec-label">Estoque:</span>
+                <span id="txtEstoque" class="spec-value">-</span>
+            </div>
+            <button type="button" class="btn-action" onclick="adicionarNaSacola()">Adicionar à Sacola</button>
+        </div>
+
+        <!-- MODO VENDEDOR / EDIÇÃO MINIMALISTA -->
+        <form id="vendedorForm" style="display: none;">
+            <div class="form-group-clean">
                 <label>Nome do Produto:</label>
                 <input type="text" id="nome" required>
             </div>
 
-            <div class="form-group">
+            <div class="form-group-clean">
                 <label>Preço (R$):</label>
                 <input type="text" id="preco" required>
             </div>
 
-            <div class="form-group">
+            <div class="form-group-clean">
                 <label>Categoria:</label>
                 <select id="categoria" required>
                     <option value="NOVA_COLECO">NOVA COLEÇÃO</option>
@@ -97,7 +124,7 @@
                 </select>
             </div>
 
-            <div class="form-group">
+            <div class="form-group-clean">
                 <label>Tamanho:</label>
                 <select id="tamanho" required>
                     <option value="P">P</option>
@@ -107,24 +134,18 @@
                 </select>
             </div>
 
-            <div class="form-group">
+            <div class="form-group-clean">
                 <label>Cor Disponível:</label>
                 <input type="text" id="cor" required>
             </div>
 
-            <div class="form-group">
+            <div class="form-group-clean">
                 <label>Estoque Disponível:</label>
                 <input type="number" id="qtEstoque" required>
             </div>
 
-            <div id="vendedorActions" style="display: none; margin-top: 20px;">
-                <button type="submit" class="btn-action">Salvar Alterações</button>
-                <button type="button" class="btn-action btn-danger" onclick="excluirProduto()">Remover do Catálogo</button>
-            </div>
-
-            <div id="clienteActions" style="display: none; margin-top: 20px;">
-                <button type="button" class="btn-action" onclick="adicionarNaSacola()">Adicionar à Sacola</button>
-            </div>
+            <button type="submit" class="btn-action">Salvar Alterações</button>
+            <button type="button" class="btn-action btn-danger" onclick="excluirProduto()">Remover do Catálogo</button>
         </form>
     </div>
 </main>
@@ -133,7 +154,6 @@
     const urlParams = new URLSearchParams(window.location.search);
     const produtoId = urlParams.get('id');
 
-    // Mapeia para Render se estiver em produção ou para localhost:8080 se estiver em dev
     const BASE_URL = window.location.hostname.includes('onrender.com')
         ? window.location.origin
         : 'http://localhost:8080';
@@ -143,11 +163,13 @@
 
     function configurarInterface() {
         if (role === 'VENDEDOR') {
-            document.getElementById('vendedorActions').style.display = 'block';
+            document.getElementById('vendedorForm').style.display = 'block';
             document.getElementById('uploadBox').style.display = 'block';
+            document.getElementById('clienteView').style.display = 'none';
         } else {
-            document.getElementById('clienteActions').style.display = 'block';
-            document.querySelectorAll('#detalhesForm input, #detalhesForm select').forEach(i => i.disabled = true);
+            document.getElementById('clienteView').style.display = 'block';
+            document.getElementById('vendedorForm').style.display = 'none';
+            document.getElementById('uploadBox').style.display = 'none';
         }
     }
 
@@ -164,9 +186,17 @@
 
             produtoAtual = await res.json();
 
+            // Preenche exibição do título e preço
             document.getElementById('exibicaoNome').innerText = produtoAtual.nome;
             document.getElementById('exibicaoPreco').innerText = `R$ ${parseFloat(produtoAtual.preco).toFixed(2)}`;
 
+            // Preenche MODO CLIENTE (Texto simples)
+            document.getElementById('txtCategoria').innerText = (produtoAtual.categoria || '').replace('_', ' ');
+            document.getElementById('txtTamanho').innerText = produtoAtual.tamanho || '-';
+            document.getElementById('txtCor').innerText = produtoAtual.cor || '-';
+            document.getElementById('txtEstoque').innerText = produtoAtual.qtEstoque || '0';
+
+            // Preenche MODO VENDEDOR (Campos editáveis)
             document.getElementById('nome').value = produtoAtual.nome || '';
             document.getElementById('preco').value = produtoAtual.preco || '';
             document.getElementById('categoria').value = produtoAtual.categoria || 'NOVA_COLECO';
@@ -177,7 +207,7 @@
             renderizarGaleria();
         } catch (err) {
             console.error(err);
-            alert('Não foi possível carregar este produto. Verifique se a aplicação Spring Boot (porta 8080) está rodando.');
+            alert('Não foi possível carregar este produto.');
         }
     }
 
@@ -208,7 +238,7 @@
         el.classList.add('active');
     }
 
-    document.getElementById('detalhesForm').addEventListener('submit', async (e) => {
+    document.getElementById('vendedorForm').addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const nome = document.getElementById('nome').value.trim();
