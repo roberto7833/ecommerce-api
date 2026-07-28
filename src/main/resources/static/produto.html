@@ -3,59 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matuta | Detalhes do Produto</title>
+    <title>Matuta Boutique | Detalhes da Peça</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Didot", "Playfair Display", Arial, sans-serif; }
-        body { background-color: #fcfbfa; color: #1c1a17; padding-bottom: 100px; }
+        body { background-color: #fcfbfa; color: #1c1a17; padding-bottom: 80px; }
 
-        header { background-color: #ffffff; padding: 25px 50px; border-bottom: 1px solid #eae5df; }
+        header { background-color: #ffffff; padding: 20px 50px; border-bottom: 1px solid #eae5df; }
         .header-container { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: auto; }
-        .logo { font-size: 32px; letter-spacing: 6px; color: #1c1a17; text-decoration: none; font-family: "Playfair Display", serif; cursor: pointer; }
+        .logo { font-size: 28px; letter-spacing: 5px; color: #1c1a17; text-decoration: none; font-family: "Playfair Display", serif; }
+        .btn-voltar { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; border: 1px solid #1c1a17; padding: 8px 18px; text-decoration: none; color: #1c1a17; transition: all 0.2s; }
+        .btn-voltar:hover { background: #1c1a17; color: #ffffff; }
 
-        .right-menu { display: flex; align-items: center; gap: 25px; }
-        .btn-voltar { font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; cursor: pointer; color: #575249; text-decoration: none; border-bottom: 1px solid #575249; padding-bottom: 2px; }
-        .btn-auth { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; border: 1px solid #1c1a17; padding: 6px 15px; cursor: pointer; }
+        .container { max-width: 1200px; margin: 50px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
 
-        .sacola-container { position: relative; cursor: pointer; display: flex; align-items: center; background: transparent; border: none; outline: none; padding: 5px; color: #1c1a17; }
-        .sacola-container svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; }
-        .sacola-badge { position: absolute; top: -4px; right: -4px; background-color: #1c1a17; color: #ffffff; font-family: sans-serif; font-size: 9px; font-weight: bold; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .gallery { display: flex; flex-direction: column; gap: 20px; }
+        .main-img-wrapper { width: 100%; aspect-ratio: 3/4; background-color: #f4f0ea; overflow: hidden; position: relative; }
+        .main-img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
 
-        .produto-container { max-width: 1200px; margin: 60px auto; padding: 0 50px; display: flex; gap: 80px; }
+        .thumbnails { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; }
+        .thumb-item { position: relative; width: 80px; aspect-ratio: 3/4; cursor: pointer; border: 1px solid transparent; }
+        .thumb-item.active { border-color: #1c1a17; }
+        .thumb-item img { width: 100%; height: 100%; object-fit: cover; }
+        .btn-delete-img { position: absolute; top: 2px; right: 2px; background: rgba(220, 53, 69, 0.9); color: white; border: none; width: 18px; height: 18px; border-radius: 50%; font-size: 10px; cursor: pointer; display: none; align-items: center; justify-content: center; }
+        .thumb-item:hover .btn-delete-img { display: flex; }
 
-        .col-imagem-wrapper { flex: 1.2; display: flex; flex-direction: column; gap: 15px; }
-        .col-imagem { background-color: #f4f0ea; aspect-ratio: 3/4; overflow: hidden; width: 100%; }
-        .col-imagem img { width: 100%; height: 100%; object-fit: cover; }
+        .product-details { display: flex; flex-direction: column; gap: 20px; }
+        .product-title { font-size: 32px; font-weight: 300; letter-spacing: 3px; font-family: "Playfair Display", serif; }
+        .product-price { font-size: 22px; color: #1c1a17; }
 
-        .galeria-miniaturas { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; min-height: 105px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #7a7265; font-weight: bold; }
+        .form-group input, .form-group select { padding: 12px; border: 1px solid #eae5df; background: #ffffff; font-size: 14px; outline: none; }
 
-        /* Container da miniatura com suporte ao botão de apagar */
-        .thumb-container { position: relative; width: 70px; aspect-ratio: 3/4; flex-shrink: 0; }
-        .miniatura { width: 100%; height: 100%; object-fit: cover; cursor: pointer; border: 1px solid transparent; background-color: #f4f0ea; }
-        .miniatura.active { border-color: #1c1a17; }
-        .btn-delete-photo { display: none; position: absolute; top: 2px; right: 2px; background: rgba(220, 53, 69, 0.9); color: white; border: none; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; cursor: pointer; align-items: center; justify-content: center; line-height: 1; z-index: 5; }
+        .btn-action { width: 100%; padding: 16px; background: #1c1a17; color: white; border: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; font-weight: bold; transition: opacity 0.2s; }
+        .btn-action:hover { opacity: 0.9; }
+        .btn-danger { background: transparent; border: 1px solid #dc3545; color: #dc3545; margin-top: 10px; }
+        .btn-danger:hover { background: #dc3545; color: white; }
 
-        .col-detalhes { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-        .editable-input { font-size: 28px; font-weight: 400; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; font-family: "Playfair Display", serif; border: none; background: transparent; width: 100%; outline: none; color: #1c1a17; }
-        .editable-input.active-edit, .editable-field.active-edit, .p-preco.active-edit { border-bottom: 1px dashed #7a7265; background: #ffffff; padding: 2px 5px; }
+        .upload-section { margin-top: 20px; padding: 20px; border: 1px dashed #eae5df; background: #ffffff; }
 
-        .p-sku { font-size: 11px; color: #7a7265; letter-spacing: 1px; margin-bottom: 25px; }
-        .price-container { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; }
-        .p-preco { font-size: 22px; color: #1c1a17; font-weight: 300; border: none; background: transparent; width: 150px; outline: none; }
-
-        .info-linha { border-top: 1px solid #eae5df; border-bottom: 1px solid #eae5df; padding: 20px 0; margin-bottom: 30px; }
-        .info-item { font-size: 13px; color: #575249; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; }
-        .editable-field { border: none; background: transparent; font-size: 13px; color: #1c1a17; font-weight: bold; margin-left: 5px; outline: none; font-family: sans-serif; width: 100%; }
-
-        .select-cor-cliente { padding: 6px 12px; border: 1px solid #eae5df; font-size: 12px; outline: none; background: #ffffff; margin-left: 5px; text-transform: uppercase; }
-        .admin-fotos-box { display: none; margin-top: 10px; padding: 15px; background: #f4f0ea; border: 1px dashed #7a7265; }
-        .file-label { font-size: 11px; color: #575249; display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
-
-        .btn-salvar-all { display: none; background: #1c1a17; color: white; border: none; padding: 16px; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; margin-bottom: 15px; width: 100%; text-align: center; font-weight: bold; }
-        .btn-salvar-all:hover { opacity: 0.9; }
-        .btn-sacola { width: 100%; padding: 16px; background-color: #1c1a17; color: white; border: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; margin-bottom: 15px; transition: opacity 0.2s; }
-        .btn-sacola:hover { opacity: 0.9; }
-        .btn-deletar { display: none; width: 100%; padding: 12px; background-color: transparent; color: #dc3545; border: 1px solid #dc3545; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: background 0.2s; }
-        .btn-deletar:hover { background-color: #dc3545; color: white; }
+        @media (max-width: 768px) {
+            .container { grid-template-columns: 1fr; gap: 30px; }
+        }
     </style>
 </head>
 <body>
@@ -63,296 +52,279 @@
 <header>
     <div class="header-container">
         <a href="index.html" class="logo">MATUTA BOUTIQUE</a>
-        <div class="right-menu">
-            <a href="index.html" class="btn-voltar">← Voltar ao acervo</a>
-            <div id="abaSacola" style="display: none;">
-                <button class="sacola-container" onclick="window.location.href='index.html'">
-                    <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
-                    <span id="sacolaContador" class="sacola-badge">0</span>
-                </button>
-            </div>
-            <span id="authBtn" class="btn-auth" onclick="gerenciarSessao()">Login</span>
-        </div>
+        <a href="index.html" class="btn-voltar">← Voltar ao Acervo</a>
     </div>
 </header>
 
-<main class="produto-container">
-    <div class="col-imagem-wrapper">
-        <div class="col-imagem">
-            <img id="produtoFoto" alt="">
+<main class="container">
+    <div class="gallery">
+        <div class="main-img-wrapper">
+            <img id="fotoPrincipal" src="" alt="Foto do Produto">
         </div>
-        <div id="galeriaMiniaturas" class="galeria-miniaturas"></div>
+        <div id="thumbnailsContainer" class="thumbnails"></div>
 
-        <!-- Campo de Alterar/Adicionar fotos exclusivo para o Vendedor -->
-        <div id="adminFotosBox" class="admin-fotos-box">
-            <label class="file-label">Adicionar mais fotos a este produto:</label>
-            <input type="file" id="novasFotosInput" accept="image/*" multiple>
+        <div id="uploadBox" class="upload-section" style="display: none;">
+            <div class="form-group">
+                <label>Adicionar mais fotos a este produto:</label>
+                <input type="file" id="novasFotos" accept="image/*" multiple>
+            </div>
         </div>
     </div>
 
-    <div class="col-detalhes">
-        <input type="text" id="produtoNome" class="editable-input" readonly>
-        <div class="p-sku" id="produtoSku">SKU: --</div>
-        <div class="price-container"><span>R$</span><input type="text" id="produtoPreco" class="p-preco" readonly></div>
+    <div class="product-details">
+        <h1 id="exibicaoNome" class="product-title">Carregando...</h1>
+        <div id="exibicaoPreco" class="product-price">R$ 0,00</div>
 
-        <div class="info-linha">
-            <div class="info-item">Categoria: <select id="produtoCategoria" class="editable-field" disabled><option value="NOVA_COLECO">NOVA COLEÇÃO</option><option value="VESTIDOS">VESTIDOS</option><option value="MODA_FEMININA">MODA FEMININA</option><option value="MODA_MASCULINA">MODA MASCULINA</option><option value="ACESSORIOS">ACESSÓRIOS</option></select></div>
-            <div class="info-item">Tamanho: <select id="produtoTamanho" class="editable-field" disabled><option value="P">P</option><option value="M">M</option><option value="G">G</option><option value="GG">GG</option></select></div>
-            <div class="info-item" id="containerCor">Cor Disponível: <input type="text" id="produtoCor" class="editable-field" readonly></div>
-            <div class="info-item">Estoque: <input type="number" id="produtoEstoque" class="editable-field" style="width: 80px;" readonly></div>
-        </div>
+        <form id="detalhesForm">
+            <div class="form-group">
+                <label>Nome do Produto:</label>
+                <input type="text" id="nome" required>
+            </div>
 
-        <button id="btnSalvarAlteracoes" class="btn-salvar-all" onclick="salvarAlteracoesProduto()">Salvar Alterações</button>
-        <button id="btnSacola" class="btn-sacola" onclick="adicionarAoCarrinho()">Adicionar à Sacola</button>
-        <button class="btn-deletar" id="btnRemover">Remover do Catálogo</button>
+            <div class="form-group">
+                <label>Preço (R$):</label>
+                <input type="text" id="preco" required>
+            </div>
+
+            <div class="form-group">
+                <label>Categoria:</label>
+                <select id="categoria" required>
+                    <option value="NOVA_COLECO">NOVA COLEÇÃO</option>
+                    <option value="VESTIDOS">VESTIDOS</option>
+                    <option value="MODA_FEMININA">MODA FEMININA</option>
+                    <option value="MODA_MASCULINA">MODA MASCULINA</option>
+                    <option value="ACESSORIOS">ACESSÓRIOS</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Tamanho:</label>
+                <select id="tamanho" required>
+                    <option value="P">P</option>
+                    <option value="M">M</option>
+                    <option value="G">G</option>
+                    <option value="GG">GG</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Cor Disponível:</label>
+                <input type="text" id="cor" required>
+            </div>
+
+            <div class="form-group">
+                <label>Estoque Disponível:</label>
+                <input type="number" id="qtEstoque" required>
+            </div>
+
+            <div id="vendedorActions" style="display: none; margin-top: 20px;">
+                <button type="submit" class="btn-action">Salvar Alterações</button>
+                <button type="button" class="btn-action btn-danger" onclick="excluirProduto()">Remover do Catálogo</button>
+            </div>
+
+            <div id="clienteActions" style="display: none; margin-top: 20px;">
+                <button type="button" class="btn-action" onclick="adicionarNaSacola()">Adicionar à Sacola</button>
+            </div>
+        </form>
     </div>
 </main>
 
 <script>
-    // URL Dinâmica: Detecta se o site está rodando online no Render ou local
-    const API_URL = window.location.hostname.includes('onrender.com')
-        ? `${window.location.origin}/todos`
-        : 'http://localhost:8080/todos';
-
     const urlParams = new URLSearchParams(window.location.search);
     const produtoId = urlParams.get('id');
+
+    // Mapeia para Render se estiver em produção ou para localhost:8080 se estiver em dev
+    const BASE_URL = window.location.hostname.includes('onrender.com')
+        ? window.location.origin
+        : 'http://localhost:8080';
+
     let produtoAtual = null;
-    let listaImagensMantidas = [];
+    const role = localStorage.getItem('userRole');
 
-    function checarPermissoes() {
-        const role = localStorage.getItem('userRole');
-        const authBtn = document.getElementById('authBtn');
-        const btnRemover = document.getElementById('btnRemover');
-        const btnSacola = document.getElementById('btnSacola');
-        const btnSalvar = document.getElementById('btnSalvarAlteracoes');
-        const abaSacola = document.getElementById('abaSacola');
-        const adminFotosBox = document.getElementById('adminFotosBox');
-
-        if (role) {
-            authBtn.innerText = 'Sair';
-            abaSacola.style.display = (role === 'CLIENTE') ? 'block' : 'none';
-            if (role === 'VENDEDOR') {
-                btnRemover.style.display = 'block';
-                btnSacola.style.display = 'none';
-                btnSalvar.style.display = 'block';
-                adminFotosBox.style.display = 'block';
-
-                document.getElementById('produtoNome').removeAttribute('readonly');
-                document.getElementById('produtoNome').classList.add('active-edit');
-                document.getElementById('produtoPreco').removeAttribute('readonly');
-                document.getElementById('produtoPreco').classList.add('active-edit');
-                document.getElementById('produtoEstoque').removeAttribute('readonly');
-                document.getElementById('produtoEstoque').classList.add('active-edit');
-                document.getElementById('produtoCategoria').removeAttribute('disabled');
-                document.getElementById('produtoCategoria').classList.add('active-edit');
-                document.getElementById('produtoTamanho').removeAttribute('disabled');
-                document.getElementById('produtoTamanho').classList.add('active-edit');
-
-                document.querySelectorAll('.btn-delete-photo').forEach(b => b.style.display = 'flex');
-                renderizarCampoCorAdmin();
-            } else { configurarModoVisualizacao(); }
+    function configurarInterface() {
+        if (role === 'VENDEDOR') {
+            document.getElementById('vendedorActions').style.display = 'block';
+            document.getElementById('uploadBox').style.display = 'block';
         } else {
-            authBtn.innerText = 'Login';
-            configurarModoVisualizacao();
-            abaSacola.style.display = 'none';
-            btnSacola.setAttribute('onclick', "window.location.href='login.html'");
+            document.getElementById('clienteActions').style.display = 'block';
+            document.querySelectorAll('#detalhesForm input, #detalhesForm select').forEach(i => i.disabled = true);
         }
-        atualizarContadorSacola();
     }
 
-    function configurarModoVisualizacao() {
-        document.getElementById('btnRemover').style.display = 'none';
-        document.getElementById('btnSalvarAlteracoes').style.display = 'none';
-        document.getElementById('adminFotosBox').style.display = 'none';
-        document.getElementById('btnSacola').style.display = 'block';
-        document.querySelectorAll('.btn-delete-photo').forEach(b => b.style.display = 'none');
-    }
-
-    function gerenciarSessao() {
-        if (localStorage.getItem('userRole')) {
-            localStorage.removeItem('userRole');
-            localStorage.removeItem('userName');
+    async function carregarProduto() {
+        if (!produtoId) {
+            alert('Acesse esta página clicando em um produto da vitrine!');
             window.location.href = 'index.html';
-        } else { window.location.href = 'login.html'; }
-    }
-
-    function obterItensSacola() { return JSON.parse(localStorage.getItem('matuta_cart') || '[]'); }
-    function atualizarContadorSacola() { const items = obterItensSacola(); const contador = document.getElementById('sacolaContador'); if(contador) contador.innerText = items.length; }
-
-    function renderizarDropdownCoresCliente(coresString) {
-        const container = document.getElementById('containerCor');
-        const listaCores = coresString.split(',').map(c => c.trim()).filter(c => c.length > 0);
-        let htmlSelect = `Cor Escolhida: <select id="produtoCorSelect" class="select-cor-cliente">`;
-        listaCores.forEach(cor => { htmlSelect += `<option value="${cor}">${cor}</option>`; });
-        htmlSelect += `</select>`;
-        container.innerHTML = htmlSelect;
-    }
-
-    function renderizarCampoCorAdmin() {
-        const container = document.getElementById('containerCor');
-        if(container.querySelector('input')) return;
-        container.innerHTML = `Cor Disponível: <input type="text" id="produtoCor" class="editable-field active-edit" value="${produtoAtual ? produtoAtual.cor : ''}">`;
-    }
-
-    function construirGaleriaImagens(imagens) {
-        const fotoPrincipal = document.getElementById('produtoFoto');
-        const galeriaContainer = document.getElementById('galeriaMiniaturas');
-        galeriaContainer.innerHTML = '';
-
-        if (!imagens || imagens.length === 0) {
-            fotoPrincipal.src = 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?q=80&w=500';
             return;
         }
 
-        fotoPrincipal.src = imagens[0];
-        const role = localStorage.getItem('userRole');
+        try {
+            const res = await fetch(`${BASE_URL}/todos/${produtoId}`);
+            if (!res.ok) throw new Error('Produto não existe no banco');
 
-        imagens.forEach((imgUrl, index) => {
-            const thumbContainer = document.createElement('div');
-            thumbContainer.className = 'thumb-container';
+            produtoAtual = await res.json();
 
-            const imgTag = document.createElement('img');
-            imgTag.src = imgUrl;
-            imgTag.className = `miniatura ${index === 0 ? 'active' : ''}`;
-            imgTag.onclick = () => {
-                document.querySelectorAll('.miniatura').forEach(m => m.classList.remove('active'));
-                imgTag.classList.add('active');
-                fotoPrincipal.src = imgUrl;
-            };
+            document.getElementById('exibicaoNome').innerText = produtoAtual.nome;
+            document.getElementById('exibicaoPreco').innerText = `R$ ${parseFloat(produtoAtual.preco).toFixed(2)}`;
 
-            const delBtn = document.createElement('button');
-            delBtn.className = 'btn-delete-photo';
-            delBtn.innerHTML = '✕';
-            delBtn.style.display = (role === 'VENDEDOR') ? 'flex' : 'none';
-            delBtn.onclick = (e) => {
-                e.stopPropagation();
-                if(confirm("Remover esta imagem do acervo?")) {
-                    listaImagensMantidas = listaImagensMantidas.filter(url => url !== imgUrl);
-                    thumbContainer.remove();
-                    const restante = document.querySelectorAll('.miniatura');
-                    if(restante.length > 0) { restante[0].click(); }
-                    else { fotoPrincipal.src = 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?q=80&w=500'; }
-                }
-            };
+            document.getElementById('nome').value = produtoAtual.nome || '';
+            document.getElementById('preco').value = produtoAtual.preco || '';
+            document.getElementById('categoria').value = produtoAtual.categoria || 'NOVA_COLECO';
+            document.getElementById('tamanho').value = produtoAtual.tamanho || 'M';
+            document.getElementById('cor').value = produtoAtual.cor || '';
+            document.getElementById('qtEstoque').value = produtoAtual.qtEstoque || 0;
 
-            thumbContainer.appendChild(imgTag);
-            thumbContainer.appendChild(delBtn);
-            galeriaContainer.appendChild(thumbContainer);
+            renderizarGaleria();
+        } catch (err) {
+            console.error(err);
+            alert('Não foi possível carregar este produto. Verifique se a aplicação Spring Boot (porta 8080) está rodando.');
+        }
+    }
+
+    function renderizarGaleria() {
+        const principal = document.getElementById('fotoPrincipal');
+        const thumbs = document.getElementById('thumbnailsContainer');
+        thumbs.innerHTML = '';
+
+        const imagens = (produtoAtual.imagens && produtoAtual.imagens.length > 0)
+            ? produtoAtual.imagens
+            : ['https://images.unsplash.com/photo-1434389677669-e08b4cac3105?q=80&w=500'];
+
+        principal.src = imagens[0];
+
+        imagens.forEach((imgUrl, idx) => {
+            thumbs.innerHTML += `
+                <div class="thumb-item ${idx === 0 ? 'active' : ''}" onclick="trocarFotoPrincipal('${imgUrl}', this)">
+                    <img src="${imgUrl}" alt="Thumbnail">
+                    ${role === 'VENDEDOR' && imagens.length > 1 ? `<button type="button" class="btn-delete-img" onclick="removerFoto(event, '${imgUrl}')">✕</button>` : ''}
+                </div>
+            `;
         });
     }
 
-    async function carregarDetalhesProduto() {
-        if (!produtoId) return;
-        try {
-            const resposta = await fetch(API_URL);
-            const dados = await resposta.json();
-            const produtos = dados.content ? dados.content : dados;
-            produtoAtual = produtos.find(p => p.id == produtoId);
-
-            if (!produtoAtual) { window.location.href = 'index.html'; return; }
-
-            document.getElementById('produtoNome').value = produtoAtual.nome;
-            document.getElementById('produtoSku').innerText = `SKU: ${produtoAtual.sku}`;
-            document.getElementById('produtoPreco').value = produtoAtual.preco.toFixed(2);
-            document.getElementById('produtoCategoria').value = produtoAtual.categoria;
-            document.getElementById('produtoTamanho').value = produtoAtual.tamanho;
-            document.getElementById('produtoEstoque').value = produtoAtual.qtEstoque;
-
-            listaImagensMantidas = [...produtoAtual.imagens];
-            construirGaleriaImagens(listaImagensMantidas);
-
-            const role = localStorage.getItem('userRole');
-            if (role !== 'VENDEDOR') { renderizarDropdownCoresCliente(produtoAtual.cor); }
-            else { renderizarCampoCorAdmin(); }
-
-            document.getElementById('btnRemover').onclick = () => deletarRoupa(produtoAtual.id);
-        } catch (erro) { console.error('Erro ao buscar detalhes do produto:', erro); }
+    function trocarFotoPrincipal(url, el) {
+        document.getElementById('fotoPrincipal').src = url;
+        document.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
     }
 
-    async function salvarAlteracoesProduto() {
-        const novoNome = document.getElementById('produtoNome').value.trim();
+    document.getElementById('detalhesForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-        // Trata vírgula informada no preço substituindo por ponto
-        const precoBruto = document.getElementById('produtoPreco').value.replace(',', '.');
-        const novoPreco = parseFloat(precoBruto);
+        const nome = document.getElementById('nome').value.trim();
+        const precoRaw = document.getElementById('preco').value.toString().replace(',', '.').trim();
+        const preco = parseFloat(precoRaw);
+        const cor = document.getElementById('cor').value.trim();
+        const qtEstoque = parseInt(document.getElementById('qtEstoque').value);
 
-        const novaCategoria = document.getElementById('produtoCategoria').value;
-        const novoTamanho = document.getElementById('produtoTamanho').value;
-        const novaCor = document.getElementById('produtoCor').value.trim();
-        const novoEstoque = parseInt(document.getElementById('produtoEstoque').value);
-        const novasFotos = document.getElementById('novasFotosInput').files;
-
-        if (!novoNome || isNaN(novoPreco) || novoPreco <= 0 || !novaCor || isNaN(novoEstoque)) {
+        if (!nome || isNaN(preco) || preco <= 0 || !cor || isNaN(qtEstoque)) {
             alert('Preencha todos os campos com valores válidos antes de salvar.');
             return;
         }
 
         const dadosAtualizados = {
-            nome: novoNome,
-            descricao: produtoAtual.descricao,
-            preco: novoPreco,
-            sku: produtoAtual.sku,
-            qtEstoque: novoEstoque,
-            tamanho: novoTamanho,
-            categoria: novaCategoria,
-            cor: novaCor,
-            imagens: listaImagensMantidas
+            ...produtoAtual,
+            nome: nome,
+            preco: preco,
+            categoria: document.getElementById('categoria').value,
+            tamanho: document.getElementById('tamanho').value,
+            cor: cor,
+            qtEstoque: qtEstoque
         };
 
+        const files = document.getElementById('novasFotos').files;
         const formData = new FormData();
         formData.append("data", new Blob([JSON.stringify(dadosAtualizados)], { type: "application/json" }));
 
-        for (let i = 0; i < novasFotos.length; i++) {
-            formData.append("foto", novasFotos[i]);
+        if (files && files.length > 0) {
+            for (let i = 0; i < files.length; i++) {
+                formData.append("foto", files[i]);
+            }
         }
 
         try {
-            const resposta = await fetch(`${API_URL}/${produtoId}`, { method: 'PUT', body: formData });
-            if (resposta.ok) {
-                alert('Produto e imagens atualizados com sucesso!');
-                window.location.reload();
+            const res = await fetch(`${BASE_URL}/todos/${produtoId}`, {
+                method: 'PUT',
+                body: formData
+            });
+
+            if (res.ok) {
+                alert('Produto e fotos salvos com sucesso!');
+                document.getElementById('novasFotos').value = '';
+                carregarProduto();
             } else {
-                const erroMsg = await resposta.text();
-                alert('Erro ao atualizar produto: ' + erroMsg);
+                const erroTxt = await res.text();
+                alert('Erro ao atualizar no servidor: ' + erroTxt);
             }
         } catch (err) {
             console.error(err);
-            alert('Erro ao conectar com o servidor.');
+            alert('Erro de conexão ao salvar alterações.');
+        }
+    });
+
+    async function removerFoto(e, imgUrl) {
+        e.stopPropagation();
+        if (!confirm('Deseja remover esta foto do produto?')) return;
+
+        produtoAtual.imagens = produtoAtual.imagens.filter(img => img !== imgUrl);
+
+        const formData = new FormData();
+        formData.append("data", new Blob([JSON.stringify(produtoAtual)], { type: "application/json" }));
+
+        try {
+            const res = await fetch(`${BASE_URL}/todos/${produtoId}`, {
+                method: 'PUT',
+                body: formData
+            });
+
+            if (res.ok) {
+                carregarProduto();
+            } else {
+                alert('Erro ao remover imagem.');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Erro ao conectar ao servidor.');
         }
     }
 
-    function adicionarAoCarrinho() {
-        if (!produtoAtual) return;
-        let cart = obterItensSacola();
-        const corSelecionada = document.getElementById('produtoCorSelect') ? document.getElementById('produtoCorSelect').value : produtoAtual.cor;
-        const itemSacola = {
+    async function excluirProduto() {
+        if (!confirm('Tem certeza que deseja excluir esta peça do catálogo?')) return;
+
+        try {
+            const res = await fetch(`${BASE_URL}/todos/${produtoId}`, {
+                method: 'DELETE'
+            });
+
+            if (res.ok) {
+                alert('Produto removido!');
+                window.location.href = 'index.html';
+            } else {
+                alert('Erro ao excluir produto.');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Erro ao conectar ao servidor.');
+        }
+    }
+
+    function adicionarNaSacola() {
+        let cart = JSON.parse(localStorage.getItem('matuta_cart') || '[]');
+        cart.push({
             id: produtoAtual.id,
             nome: produtoAtual.nome,
             preco: produtoAtual.preco,
-            tamanho: document.getElementById('produtoTamanho').value,
-            categoria: produtoAtual.categoria,
-            cor: corSelecionada,
-            foto: listaImagensMantidas[0] || 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?q=80&w=500'
-        };
-        cart.push(itemSacola);
+            tamanho: produtoAtual.tamanho,
+            cor: produtoAtual.cor,
+            foto: (produtoAtual.imagens && produtoAtual.imagens.length > 0) ? produtoAtual.imagens[0] : ''
+        });
         localStorage.setItem('matuta_cart', JSON.stringify(cart));
-        atualizarContadorSacola();
-        alert(`${produtoAtual.nome} foi adicionado à sacola!`);
+        alert('Produto adicionado à sua sacola!');
+        window.location.href = 'index.html';
     }
 
-    async function deletarRoupa(id) {
-        if (!confirm('Deseja realmente remover esta peça do acervo?')) return;
-        try {
-            const resposta = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-            if (resposta.ok) { window.location.href = 'index.html'; }
-            else { alert('Erro ao deletar produto.'); }
-        } catch(e) {
-            console.error(e);
-            alert('Erro de conexão ao remover o produto.');
-        }
-    }
-
-    carregarDetalhesProduto().then(() => checarPermissoes());
+    configurarInterface();
+    carregarProduto();
 </script>
 </body>
 </html>
